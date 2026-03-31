@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+    --color-brand: #e11d48;
+    --color-brand-hover: #be123c;
+    --color-sidebar: #0f172a;
+}

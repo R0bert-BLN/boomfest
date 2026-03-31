@@ -1,0 +1,134 @@
+@using BoomFest.Enums
+@model BoomFest.Dtos.FestivalDto
+@{
+    ViewData["Title"] = "Create Festival";
+    Layout = "_AdminLayout";
+}
+
+<div class="max-w-5xl mx-auto pb-8">
+    <div class="flex items-center gap-4 mb-10">
+        <a asp-action="Index" class="group flex items-center justify-center w-8 h-8 rounded-full border border-slate-200 bg-white hover:border-brand transition-all shadow-sm">
+            <svg class="w-4 h-4 text-slate-500 group-hover:text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+        </a>
+        <h2 class="text-lg font-bold text-slate-800">Create New Festival</h2>
+    </div>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data" class="space-y-8">
+        
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-8 space-y-8">
+                
+                <div x-data="{ fileName: '' }">
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Event Poster Banner</label>
+                    <label for="poster-upload" class="relative h-28 w-full border-2 border-dashed border-slate-200 rounded-xl flex flex-col items-center justify-center bg-slate-50/50 hover:bg-slate-50 hover:border-brand transition-all cursor-pointer group">
+                        <div class="flex flex-col items-center justify-center">
+                            <svg class="w-6 h-6 mb-1 text-slate-300 group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <span class="text-[11px] text-slate-500" x-text="fileName ? fileName : 'Click to upload or drag image here'"></span>
+                        </div>
+                        <input id="poster-upload" name="PictureFile" type="file" class="hidden" @@change="fileName = $event.target.files[0].name" accept="image/*" />
+                    </label>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="md:col-span-2">
+                        <label asp-for="Title" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Event Title</label>
+                        <input asp-for="Title" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all" placeholder="e.g. Electric Nights Festival" />
+                    </div>
+                    <div>
+                        <label asp-for="Status" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Event Status</label>
+                        <div class="relative">
+                            <select asp-for="Status" asp-items="Html.GetEnumSelectList<FestivalStatus>()" class="select w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-bold text-slate-700 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand appearance-none transition-all cursor-pointer">
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. CALENDARS (Fixate și stilizate corect, cu Padding X extra) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- Start Date -->
+                    <div>
+                        <label asp-for="StartDate" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Start Date & Time</label>
+                        <div class="relative">
+                            <!-- Am modificat pl-4 in pl-5 si pr-10 in pr-12 pentru mai mult spatiu -->
+                            <input asp-for="StartDate" type="datetime-local" 
+                                   value="@(Model.StartDate.ToString("yyyy-MM-ddTHH:mm"))"
+                                   class="w-full pl-5 pr-12 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all custom-datetime cursor-pointer" />
+                            
+                            <!-- Iconița Roșie Tailwind Suprapusă (Ajustat pr-3 in pr-4 pentru a pastra echilibrul cu noul padding) -->
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                                <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"></line>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- End Date -->
+                    <div>
+                        <label asp-for="EndDate" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">End Date & Time</label>
+                        <div class="relative">
+                            <!-- Am modificat pl-4 in pl-5 si pr-10 in pr-12 pentru mai mult spatiu -->
+                            <input asp-for="EndDate" type="datetime-local" 
+                                   value="@(Model.EndDate.ToString("yyyy-MM-ddTHH:mm"))"
+                                   class="w-full pl-5 pr-12 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-medium text-slate-700 focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all custom-datetime cursor-pointer" />
+                            
+                            <!-- Iconița Roșie Tailwind Suprapusă (Ajustat pr-3 in pr-4) -->
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
+                                <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke-width="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6" stroke-width="2"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6" stroke-width="2"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10" stroke-width="2"></line>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label asp-for="Country" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Country</label>
+                        <input asp-for="Country" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all" placeholder="Romania" />
+                    </div>
+                    <div>
+                        <label asp-for="City" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">City</label>
+                        <input asp-for="City" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all" placeholder="Cluj-Napoca" />
+                    </div>
+                    <div>
+                        <label asp-for="Location" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Location / Venue</label>
+                        <input asp-for="Location" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-medium focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all" placeholder="e.g. Cluj Arena" />
+                    </div>
+                </div>
+
+                <div x-data="{ count: @(Model.Description?.Length ?? 0), limit: 500 }">
+                    <label asp-for="Description" class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Description (Public)</label>
+                    <textarea asp-for="Description" 
+                              @@input="count = $event.target.value.length"
+                              maxlength="500"
+                              rows="4" 
+                              class="w-full px-4 py-3 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-all resize-none" 
+                              placeholder="Describe the atmosphere, main attractions..."></textarea>
+                    <div class="flex justify-end mt-1">
+                        <span class="text-[10px] font-bold text-slate-300 uppercase tracking-tight">
+                            <span :class="count >= limit ? 'text-brand' : ''" x-text="count"></span> / <span x-text="limit"></span> characters
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="px-8 pb-5 flex justify-end">
+                <button type="submit" class="bg-brand cursor-pointer hover:bg-brand-hover text-white px-10 py-2.5 rounded-lg text-xs font-black uppercase tracking-widest shadow-md shadow-brand/20 transition-all transform active:scale-95">
+                    Save Festival
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,35 @@
+@model IEnumerable<Festival>
+@{
+    ViewData["Title"] = "Festivals Management";
+    Layout = "_AdminLayout";
+}
+
+<div>
+    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+        <input type="text" placeholder="Search..." class="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-brand w-72 shadow-sm">
+                    
+        <a asp-action="Create" class="bg-brand hover:bg-brand-hover text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            Add Festival
+        </a>
+    </div>
+
+    <div class="bg-white border border-slate-200 shadow-sm rounded-xl overflow-hidden">
+        <table class="table w-full text-left">
+            <thead>
+            <tr class="bg-slate-50 text-[10px] text-slate-500 uppercase tracking-widest border-b border-slate-200">
+                <th class="px-6 py-4 font-bold">Event Details</th>
+                <th class="px-6 py-4 font-bold">Date & Location</th>
+                <th class="px-6 py-4 font-bold text-center">Status</th>
+                <th class="px-6 py-4 font-bold text-right">Actions</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+            @foreach (var festival in Model)
+            {
+                <partial name="Partials/_FestivalRow" model="festival" />
+            }
+            </tbody>
+        </table>
+    </div>
+</div>

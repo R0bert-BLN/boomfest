@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+
+<html lang="ro">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>BoomFest</title>
+        <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
+        <script src="~/js/output.js" asp-append-version="true" defer></script>
+        
+        <style>
+            .custom-datetime::-webkit-calendar-picker-indicator {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0; 
+                cursor: pointer;
+            }
+        </style>
+    </head>
+
+    <body class="bg-slate-50 text-slate-800 font-sans flex h-screen overflow-hidden">
+        <partial name="_AdminSidebar" />
+
+        <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shadow-sm z-10 shrink-0">
+                <h1 class="text-lg font-bold text-slate-800">@ViewData["Title"]</h1>
+                    
+                <div class="flex items-center gap-4">
+                    <div class="text-right hidden md:block">
+                        <p class="text-sm font-bold text-slate-700 leading-none">Admin User</p>
+                        <p class="text-[10px] text-slate-400 font-medium mt-1">admin@boomfest.ro</p>
+                    </div>
+                    
+                    <div class="w-9 h-9 rounded-full bg-brand flex items-center justify-center text-white font-bold text-sm shadow-sm">A</div>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-8">
+                @RenderBody()
+            </div>
+        </main>
+
+        @await RenderSectionAsync("Scripts", required: false)
+    </body>
+</html>
