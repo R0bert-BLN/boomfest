@@ -1,0 +1,121 @@
+﻿services:
+#  app:
+#    build:
+#      context: ./boomfest
+#      dockerfile: Dockerfile
+#    container_name: boomfest_app
+#    labels:
+#      - "traefik.enable=true"
+#      - "traefik.http.routers.app.rule=Host(`boomfest.localhost`)"
+#      - "traefik.http.services.app.loadbalancer.server.port=8080"
+#    volumes:
+#      - ./boomfest:/app
+#      - ~/.nuget/packages:/home/app/.nuget/packages
+#    networks:
+#      - boomfest_network
+#    depends_on:
+#      - postgres
+#      - redis
+  
+  traefik:
+    image: traefik:v3.6
+    container_name: boomfest_traefik
+    command:
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.boomfest.localhost`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.entrypoints=web"
+    networks:
+      - boomfest_network
+  
+  postgres:
+    image: postgres:18-alpine
+    container_name: boomfest_postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - boomfest_network
+  
+  redis:
+    image: redis:8.6-alpine
+    container_name: boomfest_redis
+    command: [ "redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}" ]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - boomfest_network
+
+  mailpit:
+    image: axllent/mailpit:v1.29
+    container_name: boomfest_mailpit
+    environment:
+      - MP_MAX_MESSAGES=1000
+      - MP_DATABASE=/data/mailpit.db
+    volumes:
+      - mailpit_data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mailpit.rule=Host(`mailpit.boomfest.localhost`)"
+      - "traefik.http.services.mailpit.loadbalancer.server.port=8025"
+    networks:
+      - boomfest_network
+
+  openobserve:
+    image: public.ecr.aws/zinclabs/openobserve:v0.70.1
+    container_name: boomfest_openobserve
+    environment:
+      - ZO_ROOT_USER_EMAIL=${ZO_ROOT_USER_EMAIL}
+      - ZO_ROOT_USER_PASSWORD=${ZO_ROOT_USER_PASSWORD}
+      - ZO_DATA_DIR=/data
+    volumes:
+      - openobserve_data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.openobserve.rule=Host(`openobserve.boomfest.localhost`)"
+      - "traefik.http.services.openobserve.loadbalancer.server.port=5080"
+    networks:
+      - boomfest_network
+
+  rustfs:
+    image: rustfs/rustfs:1.0.0-alpha.90
+    container_name: boomfest_rustfs
+    volumes:
+      - rustfs_data:/data
+    environment:
+      - RUSTFS_CONSOLE_ENABLE=true
+      - RUSTFS_ACCESS_KEY=${RUSTFS_ACCESS_KEY}
+      - RUSTFS_SECRET_KEY=${RUSTFS_SECRET_KEY}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rustfs.rule=Host(`rustfs.boomfest.localhost`)"
+      - "traefik.http.services.rustfs.loadbalancer.server.port=9001"
+    networks:
+      - boomfest_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  mailpit_data:
+  openobserve_data:
+  rustfs_data:
+
+networks:
+  boomfest_network:
+    driver: bridge
