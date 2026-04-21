@@ -1,0 +1,3870 @@
+Index: Dtos/Api/CrudDtos.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dtos/Api/CrudDtos.cs b/Dtos/Api/CrudDtos.cs
+new file mode 100644
+--- /dev/null	(date 1776708871226)
++++ b/Dtos/Api/CrudDtos.cs	(date 1776708871226)
+@@ -0,0 +1,4 @@
++namespace BoomFest.Dtos.Api;
++
++// DTOs were split into one file per model in this folder.
++
+Index: Repositories/Interfaces/IRepositories.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/Interfaces/IRepositories.cs b/Repositories/Interfaces/IRepositories.cs
+new file mode 100644
+--- /dev/null	(date 1776708929730)
++++ b/Repositories/Interfaces/IRepositories.cs	(date 1776708929730)
+@@ -0,0 +1,4 @@
++namespace BoomFest.Repositories.Interfaces;
++
++// Repository contracts were split into one file per repository under Repositories/.
++
+Index: Repositories/Repositories.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/Repositories.cs b/Repositories/Repositories.cs
+new file mode 100644
+--- /dev/null	(date 1776708929787)
++++ b/Repositories/Repositories.cs	(date 1776708929787)
+@@ -0,0 +1,4 @@
++namespace BoomFest.Repositories;
++
++// Repository implementations were split into one file per repository.
++
+Index: Services/Interfaces/IServices.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Interfaces/IServices.cs b/Services/Interfaces/IServices.cs
+new file mode 100644
+--- /dev/null	(date 1776709068683)
++++ b/Services/Interfaces/IServices.cs	(date 1776709068683)
+@@ -0,0 +1,4 @@
++namespace BoomFest.Services.Interfaces;
++
++// Service contracts were split into one file per interface under Services/Interfaces/.
++
+Index: Services/ServiceExceptions.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/ServiceExceptions.cs b/Services/ServiceExceptions.cs
+new file mode 100644
+--- /dev/null	(date 1776708321243)
++++ b/Services/ServiceExceptions.cs	(date 1776708321243)
+@@ -0,0 +1,4 @@
++namespace BoomFest.Services;
++
++public sealed class BusinessRuleException(string message) : Exception(message);
++
+Index: Services/Services.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Services.cs b/Services/Services.cs
+new file mode 100644
+--- /dev/null	(date 1776709068795)
++++ b/Services/Services.cs	(date 1776709068795)
+@@ -0,0 +1,4 @@
++namespace BoomFest.Services;
++
++// Service implementations were split into one file per service class.
++
+Index: Controllers/Api/CrudControllers.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controllers/Api/CrudControllers.cs b/Controllers/Api/CrudControllers.cs
+new file mode 100644
+--- /dev/null	(date 1776709166695)
++++ b/Controllers/Api/CrudControllers.cs	(date 1776709166695)
+@@ -0,0 +1,4 @@
++namespace BoomFest.Controllers.Api;
++
++// API controller bundle replaced by MVC controllers under Controllers/.
++
+Index: Dtos/Api/ArtistDtos.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dtos/Api/ArtistDtos.cs b/Dtos/Api/ArtistDtos.cs
+new file mode 100644
+--- /dev/null	(date 1776710318108)
++++ b/Dtos/Api/ArtistDtos.cs	(date 1776710318108)
+@@ -0,0 +1,29 @@
++using System.ComponentModel.DataAnnotations;
++
++namespace BoomFest.Dtos.Api;
++
++public class ArtistCreateDto
++{
++    [Required]
++    [StringLength(150)]
++    public string Name { get; set; } = string.Empty;
++
++    [Url]
++    public string? PictureUrl { get; set; }
++
++    [StringLength(4000)]
++    public string? Description { get; set; }
++}
++
++public sealed class ArtistUpdateDto : ArtistCreateDto;
++
++public sealed class ArtistReadDto
++{
++    public Guid Id { get; set; }
++    public required string Name { get; set; }
++    public string? PictureUrl { get; set; }
++    public string? Description { get; set; }
++    public DateTime CreatedAt { get; set; }
++    public DateTime UpdatedAt { get; set; }
++}
++
+Index: Dtos/Api/FestivalDtos.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dtos/Api/FestivalDtos.cs b/Dtos/Api/FestivalDtos.cs
+new file mode 100644
+--- /dev/null	(date 1776710318301)
++++ b/Dtos/Api/FestivalDtos.cs	(date 1776710318301)
+@@ -0,0 +1,65 @@
++using System.ComponentModel.DataAnnotations;
++using BoomFest.Enums;
++
++namespace BoomFest.Dtos.Api;
++
++public class FestivalCreateDto : IValidatableObject
++{
++    [Required]
++    [StringLength(200)]
++    public string Title { get; set; } = string.Empty;
++
++    [Url]
++    public string? PictureUrl { get; set; }
++
++    [StringLength(8000)]
++    public string? Description { get; set; }
++
++    [Required]
++    public FestivalStatus Status { get; set; }
++
++    [Required]
++    public DateTime StartDate { get; set; }
++
++    [Required]
++    public DateTime EndDate { get; set; }
++
++    [Required]
++    [StringLength(100)]
++    public string Country { get; set; } = string.Empty;
++
++    [Required]
++    [StringLength(100)]
++    public string City { get; set; } = string.Empty;
++
++    [Required]
++    [StringLength(250)]
++    public string Location { get; set; } = string.Empty;
++
++    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
++    {
++        if (EndDate <= StartDate)
++        {
++            yield return new ValidationResult("EndDate must be after StartDate.", [nameof(EndDate)]);
++        }
++    }
++}
++
++public sealed class FestivalUpdateDto : FestivalCreateDto;
++
++public sealed class FestivalReadDto
++{
++    public Guid Id { get; set; }
++    public required string Title { get; set; }
++    public string? PictureUrl { get; set; }
++    public string? Description { get; set; }
++    public FestivalStatus Status { get; set; }
++    public DateTime StartDate { get; set; }
++    public DateTime EndDate { get; set; }
++    public required string Country { get; set; }
++    public required string City { get; set; }
++    public required string Location { get; set; }
++    public DateTime CreatedAt { get; set; }
++    public DateTime UpdatedAt { get; set; }
++}
++
+Index: Dtos/Api/LineupDtos.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dtos/Api/LineupDtos.cs b/Dtos/Api/LineupDtos.cs
+new file mode 100644
+--- /dev/null	(date 1776710318504)
++++ b/Dtos/Api/LineupDtos.cs	(date 1776710318504)
+@@ -0,0 +1,44 @@
++using System.ComponentModel.DataAnnotations;
++
++namespace BoomFest.Dtos.Api;
++
++public class LineupCreateDto : IValidatableObject
++{
++    [Required]
++    public Guid FestivalId { get; set; }
++
++    [Required]
++    public Guid ArtistId { get; set; }
++
++    [StringLength(4000)]
++    public string? Description { get; set; }
++
++    [Required]
++    public DateTime StartDate { get; set; }
++
++    [Required]
++    public DateTime EndDate { get; set; }
++
++    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
++    {
++        if (EndDate <= StartDate)
++        {
++            yield return new ValidationResult("EndDate must be after StartDate.", [nameof(EndDate)]);
++        }
++    }
++}
++
++public sealed class LineupUpdateDto : LineupCreateDto;
++
++public sealed class LineupReadDto
++{
++    public Guid Id { get; set; }
++    public Guid FestivalId { get; set; }
++    public Guid ArtistId { get; set; }
++    public string? Description { get; set; }
++    public DateTime StartDate { get; set; }
++    public DateTime EndDate { get; set; }
++    public DateTime CreatedAt { get; set; }
++    public DateTime UpdatedAt { get; set; }
++}
++
+Index: Dtos/Api/OrderDtos.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dtos/Api/OrderDtos.cs b/Dtos/Api/OrderDtos.cs
+new file mode 100644
+--- /dev/null	(date 1776710318685)
++++ b/Dtos/Api/OrderDtos.cs	(date 1776710318685)
+@@ -0,0 +1,34 @@
++using System.ComponentModel.DataAnnotations;
++using BoomFest.Enums;
++
++namespace BoomFest.Dtos.Api;
++
++public class OrderCreateDto
++{
++    [Required]
++    public Guid UserId { get; set; }
++
++    [Required]
++    [StringLength(255)]
++    public string StripeSessionId { get; set; } = string.Empty;
++
++    [Range(0, 1000000000)]
++    public decimal TotalPrice { get; set; }
++
++    [Required]
++    public OrderStatus Status { get; set; }
++}
++
++public sealed class OrderUpdateDto : OrderCreateDto;
++
++public sealed class OrderReadDto
++{
++    public Guid Id { get; set; }
++    public Guid UserId { get; set; }
++    public required string StripeSessionId { get; set; }
++    public decimal TotalPrice { get; set; }
++    public OrderStatus Status { get; set; }
++    public DateTime CreatedAt { get; set; }
++    public DateTime UpdatedAt { get; set; }
++}
++
+Index: Dtos/Api/TicketCategoryDtos.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dtos/Api/TicketCategoryDtos.cs b/Dtos/Api/TicketCategoryDtos.cs
+new file mode 100644
+--- /dev/null	(date 1776710319102)
++++ b/Dtos/Api/TicketCategoryDtos.cs	(date 1776710319102)
+@@ -0,0 +1,37 @@
++using System.ComponentModel.DataAnnotations;
++
++namespace BoomFest.Dtos.Api;
++
++public class TicketCategoryCreateDto
++{
++    [Required]
++    public Guid FestivalId { get; set; }
++
++    [Required]
++    [StringLength(100)]
++    public string Name { get; set; } = string.Empty;
++
++    [StringLength(2000)]
++    public string? Description { get; set; }
++
++    [Range(0, 1000000000)]
++    public decimal Price { get; set; }
++
++    [Range(0, int.MaxValue)]
++    public int Stock { get; set; }
++}
++
++public sealed class TicketCategoryUpdateDto : TicketCategoryCreateDto;
++
++public sealed class TicketCategoryReadDto
++{
++    public Guid Id { get; set; }
++    public Guid FestivalId { get; set; }
++    public required string Name { get; set; }
++    public string? Description { get; set; }
++    public decimal Price { get; set; }
++    public int Stock { get; set; }
++    public DateTime CreatedAt { get; set; }
++    public DateTime UpdatedAt { get; set; }
++}
++
+Index: .idea/.idea.BoomFest/.idea/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.BoomFest/.idea/.gitignore b/.idea/.idea.BoomFest/.idea/.gitignore
+new file mode 100644
+--- /dev/null	(date 1774987224930)
++++ b/.idea/.idea.BoomFest/.idea/.gitignore	(date 1774987224930)
+@@ -0,0 +1,13 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Rider ignored files
++/contentModel.xml
++/projectSettingsUpdater.xml
++/modules.xml
++/.idea.BoomFest.iml
++# Editor-based HTTP Client requests
++/httpRequests/
++# Datasource local storage ignored files
++/dataSources/
++/dataSources.local.xml
+Index: Dtos/Api/TicketDtos.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dtos/Api/TicketDtos.cs b/Dtos/Api/TicketDtos.cs
+new file mode 100644
+--- /dev/null	(date 1776710319307)
++++ b/Dtos/Api/TicketDtos.cs	(date 1776710319307)
+@@ -0,0 +1,35 @@
++using System.ComponentModel.DataAnnotations;
++using BoomFest.Enums;
++
++namespace BoomFest.Dtos.Api;
++
++public class TicketCreateDto
++{
++    [Required]
++    public Guid CategoryId { get; set; }
++
++    [Required]
++    public Guid OrderId { get; set; }
++
++    public TicketStatus Status { get; set; } = TicketStatus.Reserved;
++
++    public DateTime? ScannedAt { get; set; }
++
++    public Guid? ScannedBy { get; set; }
++}
++
++public sealed class TicketUpdateDto : TicketCreateDto;
++
++public sealed class TicketReadDto
++{
++    public Guid Id { get; set; }
++    public Guid CategoryId { get; set; }
++    public Guid OrderId { get; set; }
++    public Guid QrCode { get; set; }
++    public TicketStatus Status { get; set; }
++    public DateTime? ScannedAt { get; set; }
++    public Guid? ScannedBy { get; set; }
++    public DateTime CreatedAt { get; set; }
++    public DateTime UpdatedAt { get; set; }
++}
++
+Index: Dtos/Api/UserDtos.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Dtos/Api/UserDtos.cs b/Dtos/Api/UserDtos.cs
+new file mode 100644
+--- /dev/null	(date 1776708845972)
++++ b/Dtos/Api/UserDtos.cs	(date 1776708845972)
+@@ -0,0 +1,66 @@
++using System.ComponentModel.DataAnnotations;
++using BoomFest.Enums;
++
++namespace BoomFest.Dtos.Api;
++
++public sealed class UserCreateDto
++{
++    [Required]
++    [StringLength(100)]
++    public string FirstName { get; set; } = string.Empty;
++
++    [Required]
++    [StringLength(100)]
++    public string LastName { get; set; } = string.Empty;
++
++    [Required]
++    [EmailAddress]
++    [StringLength(320)]
++    public string Email { get; set; } = string.Empty;
++
++    [Required]
++    [StringLength(255, MinimumLength = 6)]
++    public string Password { get; set; } = string.Empty;
++
++    [Required]
++    public UserRole Role { get; set; }
++
++    public DateTime? VerifiedAt { get; set; }
++}
++
++public sealed class UserUpdateDto
++{
++    [Required]
++    [StringLength(100)]
++    public string FirstName { get; set; } = string.Empty;
++
++    [Required]
++    [StringLength(100)]
++    public string LastName { get; set; } = string.Empty;
++
++    [Required]
++    [EmailAddress]
++    [StringLength(320)]
++    public string Email { get; set; } = string.Empty;
++
++    [StringLength(255, MinimumLength = 6)]
++    public string? Password { get; set; }
++
++    [Required]
++    public UserRole Role { get; set; }
++
++    public DateTime? VerifiedAt { get; set; }
++}
++
++public sealed class UserReadDto
++{
++    public Guid Id { get; set; }
++    public required string FirstName { get; set; }
++    public required string LastName { get; set; }
++    public required string Email { get; set; }
++    public UserRole Role { get; set; }
++    public DateTime? VerifiedAt { get; set; }
++    public DateTime CreatedAt { get; set; }
++    public DateTime UpdatedAt { get; set; }
++}
++
+Index: Repositories/ICrudRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/ICrudRepository.cs b/Repositories/ICrudRepository.cs
+new file mode 100644
+--- /dev/null	(date 1776708896878)
++++ b/Repositories/ICrudRepository.cs	(date 1776708896878)
+@@ -0,0 +1,14 @@
++using BoomFest.Models;
++
++namespace BoomFest.Repositories;
++
++public interface ICrudRepository<TEntity> where TEntity : Model
++{
++    Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
++    Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
++    Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default);
++    Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
++    Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
++    Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);
++}
++
+Index: Repositories/CrudRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/CrudRepository.cs b/Repositories/CrudRepository.cs
+new file mode 100644
+--- /dev/null	(date 1776711169816)
++++ b/Repositories/CrudRepository.cs	(date 1776711169816)
+@@ -0,0 +1,54 @@
++using BoomFest.Data;
++using BoomFest.Models;
++using Microsoft.EntityFrameworkCore;
++
++namespace BoomFest.Repositories;
++
++public abstract class CrudRepository<TEntity> : ICrudRepository<TEntity> where TEntity : Model
++{
++    protected readonly ApplicationDbContext Context;
++    protected readonly DbSet<TEntity> DbSet;
++
++    protected CrudRepository(ApplicationDbContext context)
++    {
++        Context = context;
++        DbSet = context.Set<TEntity>();
++    }
++
++    public virtual Task<List<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
++        => DbSet.AsNoTracking().ToListAsync(cancellationToken);
++
++    public virtual Task<TEntity?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++        => DbSet.AsNoTracking().FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
++
++    public virtual async Task<TEntity> CreateAsync(TEntity entity, CancellationToken cancellationToken = default)
++    {
++        DbSet.Add(entity);
++        await Context.SaveChangesAsync(cancellationToken);
++        return entity;
++    }
++
++    public virtual async Task<TEntity> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
++    {
++        DbSet.Update(entity);
++        await Context.SaveChangesAsync(cancellationToken);
++        return entity;
++    }
++
++    public virtual async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
++    {
++        var entity = await DbSet.FirstOrDefaultAsync(entry => entry.Id == id, cancellationToken);
++        if (entity is null)
++        {
++            return false;
++        }
++
++        DbSet.Remove(entity);
++        await Context.SaveChangesAsync(cancellationToken);
++        return true;
++    }
++
++    public virtual Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default)
++        => DbSet.AnyAsync(entity => entity.Id == id, cancellationToken);
++}
++
+Index: Repositories/ArtistRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/ArtistRepository.cs b/Repositories/ArtistRepository.cs
+new file mode 100644
+--- /dev/null	(date 1776708898046)
++++ b/Repositories/ArtistRepository.cs	(date 1776708898046)
+@@ -0,0 +1,9 @@
++using BoomFest.Data;
++using BoomFest.Models;
++
++namespace BoomFest.Repositories;
++
++public interface IArtistRepository : ICrudRepository<Artist>;
++
++public sealed class ArtistRepository(ApplicationDbContext context) : CrudRepository<Artist>(context), IArtistRepository;
++
+Index: Repositories/FestivalRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/FestivalRepository.cs b/Repositories/FestivalRepository.cs
+new file mode 100644
+--- /dev/null	(date 1776708898235)
++++ b/Repositories/FestivalRepository.cs	(date 1776708898235)
+@@ -0,0 +1,9 @@
++using BoomFest.Data;
++using BoomFest.Models;
++
++namespace BoomFest.Repositories;
++
++public interface IFestivalRepository : ICrudRepository<Festival>;
++
++public sealed class FestivalRepository(ApplicationDbContext context) : CrudRepository<Festival>(context), IFestivalRepository;
++
+Index: Repositories/LineupRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/LineupRepository.cs b/Repositories/LineupRepository.cs
+new file mode 100644
+--- /dev/null	(date 1776708900837)
++++ b/Repositories/LineupRepository.cs	(date 1776708900837)
+@@ -0,0 +1,25 @@
++using BoomFest.Data;
++using BoomFest.Models;
++using Microsoft.EntityFrameworkCore;
++
++namespace BoomFest.Repositories;
++
++public interface ILineupRepository : ICrudRepository<Lineup>;
++
++public sealed class LineupRepository(ApplicationDbContext context) : CrudRepository<Lineup>(context), ILineupRepository
++{
++    public override async Task<List<Lineup>> GetAllAsync(CancellationToken cancellationToken = default)
++        => await Context.Lineups
++            .AsNoTracking()
++            .Include(lineup => lineup.Festival)
++            .Include(lineup => lineup.Artist)
++            .ToListAsync(cancellationToken);
++
++    public override async Task<Lineup?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++        => await Context.Lineups
++            .AsNoTracking()
++            .Include(lineup => lineup.Festival)
++            .Include(lineup => lineup.Artist)
++            .FirstOrDefaultAsync(lineup => lineup.Id == id, cancellationToken);
++}
++
+Index: Repositories/OrderRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/OrderRepository.cs b/Repositories/OrderRepository.cs
+new file mode 100644
+--- /dev/null	(date 1776708900884)
++++ b/Repositories/OrderRepository.cs	(date 1776708900884)
+@@ -0,0 +1,31 @@
++using BoomFest.Data;
++using BoomFest.Models;
++using Microsoft.EntityFrameworkCore;
++
++namespace BoomFest.Repositories;
++
++public interface IOrderRepository : ICrudRepository<Order>
++{
++    Task<bool> StripeSessionExistsAsync(string stripeSessionId, Guid? excludedOrderId = null, CancellationToken cancellationToken = default);
++}
++
++public sealed class OrderRepository(ApplicationDbContext context) : CrudRepository<Order>(context), IOrderRepository
++{
++    public override async Task<List<Order>> GetAllAsync(CancellationToken cancellationToken = default)
++        => await Context.Orders
++            .AsNoTracking()
++            .Include(order => order.User)
++            .Include(order => order.Tickets)
++            .ToListAsync(cancellationToken);
++
++    public override async Task<Order?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++        => await Context.Orders
++            .AsNoTracking()
++            .Include(order => order.User)
++            .Include(order => order.Tickets)
++            .FirstOrDefaultAsync(order => order.Id == id, cancellationToken);
++
++    public Task<bool> StripeSessionExistsAsync(string stripeSessionId, Guid? excludedOrderId = null, CancellationToken cancellationToken = default)
++        => Context.Orders.AnyAsync(order => order.StripeSessionId == stripeSessionId && (!excludedOrderId.HasValue || order.Id != excludedOrderId.Value), cancellationToken);
++}
++
+Index: Repositories/TicketCategoryRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/TicketCategoryRepository.cs b/Repositories/TicketCategoryRepository.cs
+new file mode 100644
+--- /dev/null	(date 1776708909279)
++++ b/Repositories/TicketCategoryRepository.cs	(date 1776708909279)
+@@ -0,0 +1,25 @@
++using BoomFest.Data;
++using BoomFest.Models;
++using Microsoft.EntityFrameworkCore;
++
++namespace BoomFest.Repositories;
++
++public interface ITicketCategoryRepository : ICrudRepository<TicketCategory>;
++
++public sealed class TicketCategoryRepository(ApplicationDbContext context) : CrudRepository<TicketCategory>(context), ITicketCategoryRepository
++{
++    public override async Task<List<TicketCategory>> GetAllAsync(CancellationToken cancellationToken = default)
++        => await Context.TicketCategories
++            .AsNoTracking()
++            .Include(category => category.Festival)
++            .Include(category => category.Tickets)
++            .ToListAsync(cancellationToken);
++
++    public override async Task<TicketCategory?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++        => await Context.TicketCategories
++            .AsNoTracking()
++            .Include(category => category.Festival)
++            .Include(category => category.Tickets)
++            .FirstOrDefaultAsync(category => category.Id == id, cancellationToken);
++}
++
+Index: Repositories/TicketRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/TicketRepository.cs b/Repositories/TicketRepository.cs
+new file mode 100644
+--- /dev/null	(date 1776708910226)
++++ b/Repositories/TicketRepository.cs	(date 1776708910226)
+@@ -0,0 +1,25 @@
++using BoomFest.Data;
++using BoomFest.Models;
++using Microsoft.EntityFrameworkCore;
++
++namespace BoomFest.Repositories;
++
++public interface ITicketRepository : ICrudRepository<Ticket>;
++
++public sealed class TicketRepository(ApplicationDbContext context) : CrudRepository<Ticket>(context), ITicketRepository
++{
++    public override async Task<List<Ticket>> GetAllAsync(CancellationToken cancellationToken = default)
++        => await Context.Tickets
++            .AsNoTracking()
++            .Include(ticket => ticket.Category)
++            .Include(ticket => ticket.Order)
++            .ToListAsync(cancellationToken);
++
++    public override async Task<Ticket?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++        => await Context.Tickets
++            .AsNoTracking()
++            .Include(ticket => ticket.Category)
++            .Include(ticket => ticket.Order)
++            .FirstOrDefaultAsync(ticket => ticket.Id == id, cancellationToken);
++}
++
+Index: Repositories/UserRepository.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Repositories/UserRepository.cs b/Repositories/UserRepository.cs
+new file mode 100644
+--- /dev/null	(date 1776708912006)
++++ b/Repositories/UserRepository.cs	(date 1776708912006)
+@@ -0,0 +1,17 @@
++using BoomFest.Data;
++using BoomFest.Models;
++using Microsoft.EntityFrameworkCore;
++
++namespace BoomFest.Repositories;
++
++public interface IUserRepository : ICrudRepository<User>
++{
++    Task<bool> EmailExistsAsync(string email, Guid? excludedUserId = null, CancellationToken cancellationToken = default);
++}
++
++public sealed class UserRepository(ApplicationDbContext context) : CrudRepository<User>(context), IUserRepository
++{
++    public Task<bool> EmailExistsAsync(string email, Guid? excludedUserId = null, CancellationToken cancellationToken = default)
++        => Context.Users.AnyAsync(user => user.Email == email && (!excludedUserId.HasValue || user.Id != excludedUserId.Value), cancellationToken);
++}
++
+Index: Services/Interfaces/ICrudService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Interfaces/ICrudService.cs b/Services/Interfaces/ICrudService.cs
+new file mode 100644
+--- /dev/null	(date 1776708944367)
++++ b/Services/Interfaces/ICrudService.cs	(date 1776708944367)
+@@ -0,0 +1,11 @@
++namespace BoomFest.Services.Interfaces;
++
++public interface ICrudService<TReadDto, in TCreateDto, in TUpdateDto>
++{
++    Task<List<TReadDto>> GetAllAsync(CancellationToken cancellationToken = default);
++    Task<TReadDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
++    Task<TReadDto> CreateAsync(TCreateDto dto, CancellationToken cancellationToken = default);
++    Task<TReadDto?> UpdateAsync(Guid id, TUpdateDto dto, CancellationToken cancellationToken = default);
++    Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
++}
++
+Index: Services/Interfaces/IArtistService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Interfaces/IArtistService.cs b/Services/Interfaces/IArtistService.cs
+new file mode 100644
+--- /dev/null	(date 1776708948479)
++++ b/Services/Interfaces/IArtistService.cs	(date 1776708948479)
+@@ -0,0 +1,6 @@
++using BoomFest.Dtos.Api;
++
++namespace BoomFest.Services.Interfaces;
++
++public interface IArtistService : ICrudService<ArtistReadDto, ArtistCreateDto, ArtistUpdateDto>;
++
+Index: Services/Interfaces/IFestivalService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Interfaces/IFestivalService.cs b/Services/Interfaces/IFestivalService.cs
+new file mode 100644
+--- /dev/null	(date 1776708950713)
++++ b/Services/Interfaces/IFestivalService.cs	(date 1776708950713)
+@@ -0,0 +1,6 @@
++using BoomFest.Dtos.Api;
++
++namespace BoomFest.Services.Interfaces;
++
++public interface IFestivalService : ICrudService<FestivalReadDto, FestivalCreateDto, FestivalUpdateDto>;
++
+Index: Services/Interfaces/ILineupService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Interfaces/ILineupService.cs b/Services/Interfaces/ILineupService.cs
+new file mode 100644
+--- /dev/null	(date 1776708950719)
++++ b/Services/Interfaces/ILineupService.cs	(date 1776708950719)
+@@ -0,0 +1,6 @@
++using BoomFest.Dtos.Api;
++
++namespace BoomFest.Services.Interfaces;
++
++public interface ILineupService : ICrudService<LineupReadDto, LineupCreateDto, LineupUpdateDto>;
++
+Index: Services/Interfaces/IOrderService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Interfaces/IOrderService.cs b/Services/Interfaces/IOrderService.cs
+new file mode 100644
+--- /dev/null	(date 1776708951025)
++++ b/Services/Interfaces/IOrderService.cs	(date 1776708951025)
+@@ -0,0 +1,6 @@
++using BoomFest.Dtos.Api;
++
++namespace BoomFest.Services.Interfaces;
++
++public interface IOrderService : ICrudService<OrderReadDto, OrderCreateDto, OrderUpdateDto>;
++
+Index: Services/Interfaces/ITicketCategoryService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Interfaces/ITicketCategoryService.cs b/Services/Interfaces/ITicketCategoryService.cs
+new file mode 100644
+--- /dev/null	(date 1776708951234)
++++ b/Services/Interfaces/ITicketCategoryService.cs	(date 1776708951234)
+@@ -0,0 +1,6 @@
++using BoomFest.Dtos.Api;
++
++namespace BoomFest.Services.Interfaces;
++
++public interface ITicketCategoryService : ICrudService<TicketCategoryReadDto, TicketCategoryCreateDto, TicketCategoryUpdateDto>;
++
+Index: Services/Interfaces/ITicketService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Interfaces/ITicketService.cs b/Services/Interfaces/ITicketService.cs
+new file mode 100644
+--- /dev/null	(date 1776708953690)
++++ b/Services/Interfaces/ITicketService.cs	(date 1776708953690)
+@@ -0,0 +1,6 @@
++using BoomFest.Dtos.Api;
++
++namespace BoomFest.Services.Interfaces;
++
++public interface ITicketService : ICrudService<TicketReadDto, TicketCreateDto, TicketUpdateDto>;
++
+Index: Services/Interfaces/IUserService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/Interfaces/IUserService.cs b/Services/Interfaces/IUserService.cs
+new file mode 100644
+--- /dev/null	(date 1776708953720)
++++ b/Services/Interfaces/IUserService.cs	(date 1776708953720)
+@@ -0,0 +1,6 @@
++using BoomFest.Dtos.Api;
++
++namespace BoomFest.Services.Interfaces;
++
++public interface IUserService : ICrudService<UserReadDto, UserCreateDto, UserUpdateDto>;
++
+Index: Services/ArtistService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/ArtistService.cs b/Services/ArtistService.cs
+new file mode 100644
+--- /dev/null	(date 1776708984361)
++++ b/Services/ArtistService.cs	(date 1776708984361)
+@@ -0,0 +1,61 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Models;
++using BoomFest.Repositories;
++using BoomFest.Services.Interfaces;
++
++namespace BoomFest.Services;
++
++public sealed class ArtistService(IArtistRepository repository) : IArtistService
++{
++    public async Task<List<ArtistReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
++        => (await repository.GetAllAsync(cancellationToken)).Select(Map).ToList();
++
++    public async Task<ArtistReadDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++    {
++        var artist = await repository.GetByIdAsync(id, cancellationToken);
++        return artist is null ? null : Map(artist);
++    }
++
++    public async Task<ArtistReadDto> CreateAsync(ArtistCreateDto dto, CancellationToken cancellationToken = default)
++    {
++        var artist = new Artist
++        {
++            Name = dto.Name.Trim(),
++            Description = dto.Description,
++            PictureUrl = dto.PictureUrl
++        };
++
++        var created = await repository.CreateAsync(artist, cancellationToken);
++        return Map(created);
++    }
++
++    public async Task<ArtistReadDto?> UpdateAsync(Guid id, ArtistUpdateDto dto, CancellationToken cancellationToken = default)
++    {
++        var artist = await repository.GetByIdAsync(id, cancellationToken);
++        if (artist is null)
++        {
++            return null;
++        }
++
++        artist.Name = dto.Name.Trim();
++        artist.PictureUrl = dto.PictureUrl;
++        artist.Description = dto.Description;
++
++        var updated = await repository.UpdateAsync(artist, cancellationToken);
++        return Map(updated);
++    }
++
++    public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
++        => repository.DeleteAsync(id, cancellationToken);
++
++    private static ArtistReadDto Map(Artist artist) => new()
++    {
++        Id = artist.Id,
++        Name = artist.Name,
++        PictureUrl = artist.PictureUrl,
++        Description = artist.Description,
++        CreatedAt = artist.CreatedAt,
++        UpdatedAt = artist.UpdatedAt
++    };
++}
++
+Index: Services/FestivalService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/FestivalService.cs b/Services/FestivalService.cs
+new file mode 100644
+--- /dev/null	(date 1776708985390)
++++ b/Services/FestivalService.cs	(date 1776708985390)
+@@ -0,0 +1,91 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Models;
++using BoomFest.Repositories;
++using BoomFest.Services.Interfaces;
++
++namespace BoomFest.Services;
++
++public sealed class FestivalService(IFestivalRepository repository) : IFestivalService
++{
++    public async Task<List<FestivalReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
++        => (await repository.GetAllAsync(cancellationToken)).Select(Map).ToList();
++
++    public async Task<FestivalReadDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++    {
++        var festival = await repository.GetByIdAsync(id, cancellationToken);
++        return festival is null ? null : Map(festival);
++    }
++
++    public async Task<FestivalReadDto> CreateAsync(FestivalCreateDto dto, CancellationToken cancellationToken = default)
++    {
++        EnsureFestivalDates(dto.StartDate, dto.EndDate);
++
++        var festival = new Festival
++        {
++            Title = dto.Title.Trim(),
++            PictureUrl = dto.PictureUrl,
++            Description = dto.Description,
++            Status = dto.Status,
++            StartDate = dto.StartDate,
++            EndDate = dto.EndDate,
++            Country = dto.Country.Trim(),
++            City = dto.City.Trim(),
++            Location = dto.Location.Trim()
++        };
++
++        var created = await repository.CreateAsync(festival, cancellationToken);
++        return Map(created);
++    }
++
++    public async Task<FestivalReadDto?> UpdateAsync(Guid id, FestivalUpdateDto dto, CancellationToken cancellationToken = default)
++    {
++        EnsureFestivalDates(dto.StartDate, dto.EndDate);
++
++        var festival = await repository.GetByIdAsync(id, cancellationToken);
++        if (festival is null)
++        {
++            return null;
++        }
++
++        festival.Title = dto.Title.Trim();
++        festival.PictureUrl = dto.PictureUrl;
++        festival.Description = dto.Description;
++        festival.Status = dto.Status;
++        festival.StartDate = dto.StartDate;
++        festival.EndDate = dto.EndDate;
++        festival.Country = dto.Country.Trim();
++        festival.City = dto.City.Trim();
++        festival.Location = dto.Location.Trim();
++
++        var updated = await repository.UpdateAsync(festival, cancellationToken);
++        return Map(updated);
++    }
++
++    public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
++        => repository.DeleteAsync(id, cancellationToken);
++
++    private static void EnsureFestivalDates(DateTime startDate, DateTime endDate)
++    {
++        if (endDate <= startDate)
++        {
++            throw new BusinessRuleException("Festival EndDate must be after StartDate.");
++        }
++    }
++
++    private static FestivalReadDto Map(Festival festival) => new()
++    {
++        Id = festival.Id,
++        Title = festival.Title,
++        PictureUrl = festival.PictureUrl,
++        Description = festival.Description,
++        Status = festival.Status,
++        StartDate = festival.StartDate,
++        EndDate = festival.EndDate,
++        Country = festival.Country,
++        City = festival.City,
++        Location = festival.Location,
++        CreatedAt = festival.CreatedAt,
++        UpdatedAt = festival.UpdatedAt
++    };
++}
++
+Index: Services/LineupService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/LineupService.cs b/Services/LineupService.cs
+new file mode 100644
+--- /dev/null	(date 1776708987172)
++++ b/Services/LineupService.cs	(date 1776708987172)
+@@ -0,0 +1,102 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Models;
++using BoomFest.Repositories;
++using BoomFest.Services.Interfaces;
++
++namespace BoomFest.Services;
++
++public sealed class LineupService(
++    ILineupRepository repository,
++    IFestivalRepository festivalRepository,
++    IArtistRepository artistRepository) : ILineupService
++{
++    public async Task<List<LineupReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
++        => (await repository.GetAllAsync(cancellationToken)).Select(Map).ToList();
++
++    public async Task<LineupReadDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++    {
++        var lineup = await repository.GetByIdAsync(id, cancellationToken);
++        return lineup is null ? null : Map(lineup);
++    }
++
++    public async Task<LineupReadDto> CreateAsync(LineupCreateDto dto, CancellationToken cancellationToken = default)
++    {
++        await EnsureRelationsAndDatesAsync(dto.FestivalId, dto.ArtistId, dto.StartDate, dto.EndDate, cancellationToken);
++
++        var lineup = new Lineup
++        {
++            FestivalId = dto.FestivalId,
++            ArtistId = dto.ArtistId,
++            Description = dto.Description,
++            StartDate = dto.StartDate,
++            EndDate = dto.EndDate,
++            Festival = null!,
++            Artist = null!
++        };
++
++        var created = await repository.CreateAsync(lineup, cancellationToken);
++        return Map(created);
++    }
++
++    public async Task<LineupReadDto?> UpdateAsync(Guid id, LineupUpdateDto dto, CancellationToken cancellationToken = default)
++    {
++        await EnsureRelationsAndDatesAsync(dto.FestivalId, dto.ArtistId, dto.StartDate, dto.EndDate, cancellationToken);
++
++        var lineup = await repository.GetByIdAsync(id, cancellationToken);
++        if (lineup is null)
++        {
++            return null;
++        }
++
++        lineup.FestivalId = dto.FestivalId;
++        lineup.ArtistId = dto.ArtistId;
++        lineup.Description = dto.Description;
++        lineup.StartDate = dto.StartDate;
++        lineup.EndDate = dto.EndDate;
++        lineup.Festival = null!;
++        lineup.Artist = null!;
++
++        var updated = await repository.UpdateAsync(lineup, cancellationToken);
++        return Map(updated);
++    }
++
++    public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
++        => repository.DeleteAsync(id, cancellationToken);
++
++    private async Task EnsureRelationsAndDatesAsync(Guid festivalId, Guid artistId, DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
++    {
++        if (endDate <= startDate)
++        {
++            throw new BusinessRuleException("Lineup EndDate must be after StartDate.");
++        }
++
++        if (!await festivalRepository.ExistsAsync(festivalId, cancellationToken))
++        {
++            throw new BusinessRuleException("Festival does not exist.");
++        }
++
++        if (!await artistRepository.ExistsAsync(artistId, cancellationToken))
++        {
++            throw new BusinessRuleException("Artist does not exist.");
++        }
++
++        var festival = await festivalRepository.GetByIdAsync(festivalId, cancellationToken);
++        if (festival is not null && (startDate < festival.StartDate || endDate > festival.EndDate))
++        {
++            throw new BusinessRuleException("Lineup dates must be inside the festival dates.");
++        }
++    }
++
++    private static LineupReadDto Map(Lineup lineup) => new()
++    {
++        Id = lineup.Id,
++        FestivalId = lineup.FestivalId,
++        ArtistId = lineup.ArtistId,
++        Description = lineup.Description,
++        StartDate = lineup.StartDate,
++        EndDate = lineup.EndDate,
++        CreatedAt = lineup.CreatedAt,
++        UpdatedAt = lineup.UpdatedAt
++    };
++}
++
+Index: Services/OrderService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/OrderService.cs b/Services/OrderService.cs
+new file mode 100644
+--- /dev/null	(date 1776708987293)
++++ b/Services/OrderService.cs	(date 1776708987293)
+@@ -0,0 +1,90 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Models;
++using BoomFest.Repositories;
++using BoomFest.Services.Interfaces;
++
++namespace BoomFest.Services;
++
++public sealed class OrderService(
++    IOrderRepository repository,
++    IUserRepository userRepository) : IOrderService
++{
++    public async Task<List<OrderReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
++        => (await repository.GetAllAsync(cancellationToken)).Select(Map).ToList();
++
++    public async Task<OrderReadDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++    {
++        var order = await repository.GetByIdAsync(id, cancellationToken);
++        return order is null ? null : Map(order);
++    }
++
++    public async Task<OrderReadDto> CreateAsync(OrderCreateDto dto, CancellationToken cancellationToken = default)
++    {
++        await EnsureOrderRulesAsync(dto.UserId, dto.StripeSessionId, dto.TotalPrice, null, cancellationToken);
++
++        var order = new Order
++        {
++            UserId = dto.UserId,
++            StripeSessionId = dto.StripeSessionId.Trim(),
++            TotalPrice = dto.TotalPrice,
++            Status = dto.Status,
++            User = null!
++        };
++
++        var created = await repository.CreateAsync(order, cancellationToken);
++        return Map(created);
++    }
++
++    public async Task<OrderReadDto?> UpdateAsync(Guid id, OrderUpdateDto dto, CancellationToken cancellationToken = default)
++    {
++        var order = await repository.GetByIdAsync(id, cancellationToken);
++        if (order is null)
++        {
++            return null;
++        }
++
++        await EnsureOrderRulesAsync(dto.UserId, dto.StripeSessionId, dto.TotalPrice, id, cancellationToken);
++
++        order.UserId = dto.UserId;
++        order.StripeSessionId = dto.StripeSessionId.Trim();
++        order.TotalPrice = dto.TotalPrice;
++        order.Status = dto.Status;
++        order.User = null!;
++
++        var updated = await repository.UpdateAsync(order, cancellationToken);
++        return Map(updated);
++    }
++
++    public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
++        => repository.DeleteAsync(id, cancellationToken);
++
++    private async Task EnsureOrderRulesAsync(Guid userId, string stripeSessionId, decimal totalPrice, Guid? orderId, CancellationToken cancellationToken)
++    {
++        if (totalPrice < 0)
++        {
++            throw new BusinessRuleException("Order TotalPrice cannot be negative.");
++        }
++
++        if (!await userRepository.ExistsAsync(userId, cancellationToken))
++        {
++            throw new BusinessRuleException("User does not exist.");
++        }
++
++        if (await repository.StripeSessionExistsAsync(stripeSessionId.Trim(), orderId, cancellationToken))
++        {
++            throw new BusinessRuleException("StripeSessionId must be unique.");
++        }
++    }
++
++    private static OrderReadDto Map(Order order) => new()
++    {
++        Id = order.Id,
++        UserId = order.UserId,
++        StripeSessionId = order.StripeSessionId,
++        TotalPrice = order.TotalPrice,
++        Status = order.Status,
++        CreatedAt = order.CreatedAt,
++        UpdatedAt = order.UpdatedAt
++    };
++}
++
+Index: Services/TicketCategoryService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/TicketCategoryService.cs b/Services/TicketCategoryService.cs
+new file mode 100644
+--- /dev/null	(date 1776709011022)
++++ b/Services/TicketCategoryService.cs	(date 1776709011022)
+@@ -0,0 +1,93 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Models;
++using BoomFest.Repositories;
++using BoomFest.Services.Interfaces;
++
++namespace BoomFest.Services;
++
++public sealed class TicketCategoryService(
++    ITicketCategoryRepository repository,
++    IFestivalRepository festivalRepository) : ITicketCategoryService
++{
++    public async Task<List<TicketCategoryReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
++        => (await repository.GetAllAsync(cancellationToken)).Select(Map).ToList();
++
++    public async Task<TicketCategoryReadDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++    {
++        var category = await repository.GetByIdAsync(id, cancellationToken);
++        return category is null ? null : Map(category);
++    }
++
++    public async Task<TicketCategoryReadDto> CreateAsync(TicketCategoryCreateDto dto, CancellationToken cancellationToken = default)
++    {
++        await EnsureCategoryRulesAsync(dto.FestivalId, dto.Price, dto.Stock, cancellationToken);
++
++        var category = new TicketCategory
++        {
++            FestivalId = dto.FestivalId,
++            Name = dto.Name.Trim(),
++            Description = dto.Description,
++            Price = dto.Price,
++            Stock = dto.Stock,
++            Festival = null!
++        };
++
++        var created = await repository.CreateAsync(category, cancellationToken);
++        return Map(created);
++    }
++
++    public async Task<TicketCategoryReadDto?> UpdateAsync(Guid id, TicketCategoryUpdateDto dto, CancellationToken cancellationToken = default)
++    {
++        var category = await repository.GetByIdAsync(id, cancellationToken);
++        if (category is null)
++        {
++            return null;
++        }
++
++        await EnsureCategoryRulesAsync(dto.FestivalId, dto.Price, dto.Stock, cancellationToken);
++
++        category.FestivalId = dto.FestivalId;
++        category.Name = dto.Name.Trim();
++        category.Description = dto.Description;
++        category.Price = dto.Price;
++        category.Stock = dto.Stock;
++        category.Festival = null!;
++
++        var updated = await repository.UpdateAsync(category, cancellationToken);
++        return Map(updated);
++    }
++
++    public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
++        => repository.DeleteAsync(id, cancellationToken);
++
++    private async Task EnsureCategoryRulesAsync(Guid festivalId, decimal price, int stock, CancellationToken cancellationToken)
++    {
++        if (price < 0)
++        {
++            throw new BusinessRuleException("Ticket category Price cannot be negative.");
++        }
++
++        if (stock < 0)
++        {
++            throw new BusinessRuleException("Ticket category Stock cannot be negative.");
++        }
++
++        if (!await festivalRepository.ExistsAsync(festivalId, cancellationToken))
++        {
++            throw new BusinessRuleException("Festival does not exist.");
++        }
++    }
++
++    private static TicketCategoryReadDto Map(TicketCategory category) => new()
++    {
++        Id = category.Id,
++        FestivalId = category.FestivalId,
++        Name = category.Name,
++        Description = category.Description,
++        Price = category.Price,
++        Stock = category.Stock,
++        CreatedAt = category.CreatedAt,
++        UpdatedAt = category.UpdatedAt
++    };
++}
++
+Index: Services/TicketService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/TicketService.cs b/Services/TicketService.cs
+new file mode 100644
+--- /dev/null	(date 1776709013445)
++++ b/Services/TicketService.cs	(date 1776709013445)
+@@ -0,0 +1,107 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Enums;
++using BoomFest.Models;
++using BoomFest.Repositories;
++using BoomFest.Services.Interfaces;
++
++namespace BoomFest.Services;
++
++public sealed class TicketService(
++    ITicketRepository repository,
++    ITicketCategoryRepository categoryRepository,
++    IOrderRepository orderRepository,
++    IUserRepository userRepository) : ITicketService
++{
++    public async Task<List<TicketReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
++        => (await repository.GetAllAsync(cancellationToken)).Select(Map).ToList();
++
++    public async Task<TicketReadDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++    {
++        var ticket = await repository.GetByIdAsync(id, cancellationToken);
++        return ticket is null ? null : Map(ticket);
++    }
++
++    public async Task<TicketReadDto> CreateAsync(TicketCreateDto dto, CancellationToken cancellationToken = default)
++    {
++        await EnsureTicketRulesAsync(dto, cancellationToken);
++
++        var ticket = new Ticket
++        {
++            CategoryId = dto.CategoryId,
++            OrderId = dto.OrderId,
++            Status = dto.Status,
++            ScannedAt = dto.ScannedAt,
++            ScannedBy = dto.ScannedBy,
++            Category = null!,
++            Order = null!
++        };
++
++        var created = await repository.CreateAsync(ticket, cancellationToken);
++        return Map(created);
++    }
++
++    public async Task<TicketReadDto?> UpdateAsync(Guid id, TicketUpdateDto dto, CancellationToken cancellationToken = default)
++    {
++        var ticket = await repository.GetByIdAsync(id, cancellationToken);
++        if (ticket is null)
++        {
++            return null;
++        }
++
++        await EnsureTicketRulesAsync(dto, cancellationToken);
++
++        ticket.CategoryId = dto.CategoryId;
++        ticket.OrderId = dto.OrderId;
++        ticket.Status = dto.Status;
++        ticket.ScannedAt = dto.ScannedAt;
++        ticket.ScannedBy = dto.ScannedBy;
++        ticket.Category = null!;
++        ticket.Order = null!;
++
++        var updated = await repository.UpdateAsync(ticket, cancellationToken);
++        return Map(updated);
++    }
++
++    public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
++        => repository.DeleteAsync(id, cancellationToken);
++
++    private async Task EnsureTicketRulesAsync(TicketCreateDto dto, CancellationToken cancellationToken)
++    {
++        if (!await categoryRepository.ExistsAsync(dto.CategoryId, cancellationToken))
++        {
++            throw new BusinessRuleException("Ticket category does not exist.");
++        }
++
++        if (!await orderRepository.ExistsAsync(dto.OrderId, cancellationToken))
++        {
++            throw new BusinessRuleException("Order does not exist.");
++        }
++
++        if (dto.Status == TicketStatus.Used)
++        {
++            if (!dto.ScannedBy.HasValue || !dto.ScannedAt.HasValue)
++            {
++                throw new BusinessRuleException("Used tickets must have ScannedBy and ScannedAt.");
++            }
++
++            if (!await userRepository.ExistsAsync(dto.ScannedBy.Value, cancellationToken))
++            {
++                throw new BusinessRuleException("Scanner user does not exist.");
++            }
++        }
++    }
++
++    private static TicketReadDto Map(Ticket ticket) => new()
++    {
++        Id = ticket.Id,
++        CategoryId = ticket.CategoryId,
++        OrderId = ticket.OrderId,
++        QrCode = ticket.QrCode,
++        Status = ticket.Status,
++        ScannedAt = ticket.ScannedAt,
++        ScannedBy = ticket.ScannedBy,
++        CreatedAt = ticket.CreatedAt,
++        UpdatedAt = ticket.UpdatedAt
++    };
++}
++
+Index: Services/UserService.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Services/UserService.cs b/Services/UserService.cs
+new file mode 100644
+--- /dev/null	(date 1776709013511)
++++ b/Services/UserService.cs	(date 1776709013511)
+@@ -0,0 +1,81 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Models;
++using BoomFest.Repositories;
++using BoomFest.Services.Interfaces;
++
++namespace BoomFest.Services;
++
++public sealed class UserService(IUserRepository repository) : IUserService
++{
++    public async Task<List<UserReadDto>> GetAllAsync(CancellationToken cancellationToken = default)
++        => (await repository.GetAllAsync(cancellationToken)).Select(Map).ToList();
++
++    public async Task<UserReadDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
++    {
++        var user = await repository.GetByIdAsync(id, cancellationToken);
++        return user is null ? null : Map(user);
++    }
++
++    public async Task<UserReadDto> CreateAsync(UserCreateDto dto, CancellationToken cancellationToken = default)
++    {
++        var email = dto.Email.Trim().ToLowerInvariant();
++        if (await repository.EmailExistsAsync(email, null, cancellationToken))
++        {
++            throw new BusinessRuleException("Email must be unique.");
++        }
++
++        var user = new User
++        {
++            FirstName = dto.FirstName.Trim(),
++            LastName = dto.LastName.Trim(),
++            Email = email,
++            Password = dto.Password,
++            Role = dto.Role,
++            VerifiedAt = dto.VerifiedAt
++        };
++
++        var created = await repository.CreateAsync(user, cancellationToken);
++        return Map(created);
++    }
++
++    public async Task<UserReadDto?> UpdateAsync(Guid id, UserUpdateDto dto, CancellationToken cancellationToken = default)
++    {
++        var user = await repository.GetByIdAsync(id, cancellationToken);
++        if (user is null)
++        {
++            return null;
++        }
++
++        var email = dto.Email.Trim().ToLowerInvariant();
++        if (await repository.EmailExistsAsync(email, id, cancellationToken))
++        {
++            throw new BusinessRuleException("Email must be unique.");
++        }
++
++        user.FirstName = dto.FirstName.Trim();
++        user.LastName = dto.LastName.Trim();
++        user.Email = email;
++        user.Password = string.IsNullOrWhiteSpace(dto.Password) ? user.Password : dto.Password;
++        user.Role = dto.Role;
++        user.VerifiedAt = dto.VerifiedAt;
++
++        var updated = await repository.UpdateAsync(user, cancellationToken);
++        return Map(updated);
++    }
++
++    public Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
++        => repository.DeleteAsync(id, cancellationToken);
++
++    private static UserReadDto Map(User user) => new()
++    {
++        Id = user.Id,
++        FirstName = user.FirstName,
++        LastName = user.LastName,
++        Email = user.Email,
++        Role = user.Role,
++        VerifiedAt = user.VerifiedAt,
++        CreatedAt = user.CreatedAt,
++        UpdatedAt = user.UpdatedAt
++    };
++}
++
+Index: Controllers/ArtistsController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controllers/ArtistsController.cs b/Controllers/ArtistsController.cs
+new file mode 100644
+--- /dev/null	(date 1776709113385)
++++ b/Controllers/ArtistsController.cs	(date 1776709113385)
+@@ -0,0 +1,75 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Services;
++using BoomFest.Services.Interfaces;
++using Microsoft.AspNetCore.Mvc;
++
++namespace BoomFest.Controllers;
++
++[Route("Admin/[controller]")]
++public class ArtistsController(IArtistService service) : Controller
++{
++    [HttpGet]
++    public async Task<IActionResult> Index()
++        => View(await service.GetAllAsync());
++
++    [HttpGet("Create")]
++    public IActionResult Create()
++        => View(new ArtistCreateDto());
++
++    [HttpPost("Create")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Create(ArtistCreateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        await service.CreateAsync(dto);
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpGet("Edit/{id:guid}")]
++    public async Task<IActionResult> Edit(Guid id)
++    {
++        var artist = await service.GetByIdAsync(id);
++        if (artist is null)
++        {
++            return NotFound();
++        }
++
++        return View(new ArtistUpdateDto
++        {
++            Name = artist.Name,
++            Description = artist.Description,
++            PictureUrl = artist.PictureUrl
++        });
++    }
++
++    [HttpPost("Edit/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Edit(Guid id, ArtistUpdateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        var updated = await service.UpdateAsync(id, dto);
++        if (updated is null)
++        {
++            return NotFound();
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpPost("Delete/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Delete(Guid id)
++    {
++        await service.DeleteAsync(id);
++        return RedirectToAction(nameof(Index));
++    }
++}
++
+Index: Controllers/LineupsController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controllers/LineupsController.cs b/Controllers/LineupsController.cs
+new file mode 100644
+--- /dev/null	(date 1776709115297)
++++ b/Controllers/LineupsController.cs	(date 1776709115297)
+@@ -0,0 +1,94 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Services;
++using BoomFest.Services.Interfaces;
++using Microsoft.AspNetCore.Mvc;
++
++namespace BoomFest.Controllers;
++
++[Route("Admin/[controller]")]
++public class LineupsController(ILineupService service) : Controller
++{
++    [HttpGet]
++    public async Task<IActionResult> Index()
++        => View(await service.GetAllAsync());
++
++    [HttpGet("Create")]
++    public IActionResult Create()
++        => View(new LineupCreateDto());
++
++    [HttpPost("Create")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Create(LineupCreateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            await service.CreateAsync(dto);
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpGet("Edit/{id:guid}")]
++    public async Task<IActionResult> Edit(Guid id)
++    {
++        var lineup = await service.GetByIdAsync(id);
++        if (lineup is null)
++        {
++            return NotFound();
++        }
++
++        return View(new LineupUpdateDto
++        {
++            FestivalId = lineup.FestivalId,
++            ArtistId = lineup.ArtistId,
++            Description = lineup.Description,
++            StartDate = lineup.StartDate,
++            EndDate = lineup.EndDate
++        });
++    }
++
++    [HttpPost("Edit/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Edit(Guid id, LineupUpdateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            var updated = await service.UpdateAsync(id, dto);
++            if (updated is null)
++            {
++                return NotFound();
++            }
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpPost("Delete/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Delete(Guid id)
++    {
++        await service.DeleteAsync(id);
++        return RedirectToAction(nameof(Index));
++    }
++}
++
+Index: Controllers/OrdersController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controllers/OrdersController.cs b/Controllers/OrdersController.cs
+new file mode 100644
+--- /dev/null	(date 1776709115422)
++++ b/Controllers/OrdersController.cs	(date 1776709115422)
+@@ -0,0 +1,93 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Services;
++using BoomFest.Services.Interfaces;
++using Microsoft.AspNetCore.Mvc;
++
++namespace BoomFest.Controllers;
++
++[Route("Admin/[controller]")]
++public class OrdersController(IOrderService service) : Controller
++{
++    [HttpGet]
++    public async Task<IActionResult> Index()
++        => View(await service.GetAllAsync());
++
++    [HttpGet("Create")]
++    public IActionResult Create()
++        => View(new OrderCreateDto());
++
++    [HttpPost("Create")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Create(OrderCreateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            await service.CreateAsync(dto);
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpGet("Edit/{id:guid}")]
++    public async Task<IActionResult> Edit(Guid id)
++    {
++        var order = await service.GetByIdAsync(id);
++        if (order is null)
++        {
++            return NotFound();
++        }
++
++        return View(new OrderUpdateDto
++        {
++            UserId = order.UserId,
++            StripeSessionId = order.StripeSessionId,
++            TotalPrice = order.TotalPrice,
++            Status = order.Status
++        });
++    }
++
++    [HttpPost("Edit/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Edit(Guid id, OrderUpdateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            var updated = await service.UpdateAsync(id, dto);
++            if (updated is null)
++            {
++                return NotFound();
++            }
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpPost("Delete/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Delete(Guid id)
++    {
++        await service.DeleteAsync(id);
++        return RedirectToAction(nameof(Index));
++    }
++}
++
+Index: Controllers/TicketCategoriesController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controllers/TicketCategoriesController.cs b/Controllers/TicketCategoriesController.cs
+new file mode 100644
+--- /dev/null	(date 1776709130779)
++++ b/Controllers/TicketCategoriesController.cs	(date 1776709130779)
+@@ -0,0 +1,94 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Services;
++using BoomFest.Services.Interfaces;
++using Microsoft.AspNetCore.Mvc;
++
++namespace BoomFest.Controllers;
++
++[Route("Admin/[controller]")]
++public class TicketCategoriesController(ITicketCategoryService service) : Controller
++{
++    [HttpGet]
++    public async Task<IActionResult> Index()
++        => View(await service.GetAllAsync());
++
++    [HttpGet("Create")]
++    public IActionResult Create()
++        => View(new TicketCategoryCreateDto());
++
++    [HttpPost("Create")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Create(TicketCategoryCreateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            await service.CreateAsync(dto);
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpGet("Edit/{id:guid}")]
++    public async Task<IActionResult> Edit(Guid id)
++    {
++        var category = await service.GetByIdAsync(id);
++        if (category is null)
++        {
++            return NotFound();
++        }
++
++        return View(new TicketCategoryUpdateDto
++        {
++            FestivalId = category.FestivalId,
++            Name = category.Name,
++            Description = category.Description,
++            Price = category.Price,
++            Stock = category.Stock
++        });
++    }
++
++    [HttpPost("Edit/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Edit(Guid id, TicketCategoryUpdateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            var updated = await service.UpdateAsync(id, dto);
++            if (updated is null)
++            {
++                return NotFound();
++            }
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpPost("Delete/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Delete(Guid id)
++    {
++        await service.DeleteAsync(id);
++        return RedirectToAction(nameof(Index));
++    }
++}
++
+Index: Controllers/TicketsController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controllers/TicketsController.cs b/Controllers/TicketsController.cs
+new file mode 100644
+--- /dev/null	(date 1776709133040)
++++ b/Controllers/TicketsController.cs	(date 1776709133040)
+@@ -0,0 +1,94 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Services;
++using BoomFest.Services.Interfaces;
++using Microsoft.AspNetCore.Mvc;
++
++namespace BoomFest.Controllers;
++
++[Route("Admin/[controller]")]
++public class TicketsController(ITicketService service) : Controller
++{
++    [HttpGet]
++    public async Task<IActionResult> Index()
++        => View(await service.GetAllAsync());
++
++    [HttpGet("Create")]
++    public IActionResult Create()
++        => View(new TicketCreateDto());
++
++    [HttpPost("Create")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Create(TicketCreateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            await service.CreateAsync(dto);
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpGet("Edit/{id:guid}")]
++    public async Task<IActionResult> Edit(Guid id)
++    {
++        var ticket = await service.GetByIdAsync(id);
++        if (ticket is null)
++        {
++            return NotFound();
++        }
++
++        return View(new TicketUpdateDto
++        {
++            CategoryId = ticket.CategoryId,
++            OrderId = ticket.OrderId,
++            Status = ticket.Status,
++            ScannedAt = ticket.ScannedAt,
++            ScannedBy = ticket.ScannedBy
++        });
++    }
++
++    [HttpPost("Edit/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Edit(Guid id, TicketUpdateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            var updated = await service.UpdateAsync(id, dto);
++            if (updated is null)
++            {
++                return NotFound();
++            }
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpPost("Delete/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Delete(Guid id)
++    {
++        await service.DeleteAsync(id);
++        return RedirectToAction(nameof(Index));
++    }
++}
++
+Index: Controllers/UsersController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controllers/UsersController.cs b/Controllers/UsersController.cs
+new file mode 100644
+--- /dev/null	(date 1776709133070)
++++ b/Controllers/UsersController.cs	(date 1776709133070)
+@@ -0,0 +1,94 @@
++using BoomFest.Dtos.Api;
++using BoomFest.Services;
++using BoomFest.Services.Interfaces;
++using Microsoft.AspNetCore.Mvc;
++
++namespace BoomFest.Controllers;
++
++[Route("Admin/[controller]")]
++public class UsersController(IUserService service) : Controller
++{
++    [HttpGet]
++    public async Task<IActionResult> Index()
++        => View(await service.GetAllAsync());
++
++    [HttpGet("Create")]
++    public IActionResult Create()
++        => View(new UserCreateDto());
++
++    [HttpPost("Create")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Create(UserCreateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            await service.CreateAsync(dto);
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpGet("Edit/{id:guid}")]
++    public async Task<IActionResult> Edit(Guid id)
++    {
++        var user = await service.GetByIdAsync(id);
++        if (user is null)
++        {
++            return NotFound();
++        }
++
++        return View(new UserUpdateDto
++        {
++            FirstName = user.FirstName,
++            LastName = user.LastName,
++            Email = user.Email,
++            Role = user.Role,
++            VerifiedAt = user.VerifiedAt
++        });
++    }
++
++    [HttpPost("Edit/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Edit(Guid id, UserUpdateDto dto)
++    {
++        if (!ModelState.IsValid)
++        {
++            return View(dto);
++        }
++
++        try
++        {
++            var updated = await service.UpdateAsync(id, dto);
++            if (updated is null)
++            {
++                return NotFound();
++            }
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(dto);
++        }
++
++        return RedirectToAction(nameof(Index));
++    }
++
++    [HttpPost("Delete/{id:guid}")]
++    [ValidateAntiForgeryToken]
++    public async Task<IActionResult> Delete(Guid id)
++    {
++        await service.DeleteAsync(id);
++        return RedirectToAction(nameof(Index));
++    }
++}
++
+Index: .idea/.idea.BoomFest/.idea/indexLayout.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.BoomFest/.idea/indexLayout.xml b/.idea/.idea.BoomFest/.idea/indexLayout.xml
+new file mode 100644
+--- /dev/null	(date 1774987247239)
++++ b/.idea/.idea.BoomFest/.idea/indexLayout.xml	(date 1774987247239)
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="UserContentModel">
++    <attachedFolders />
++    <explicitIncludes />
++    <explicitExcludes />
++  </component>
++</project>
+\ No newline at end of file
+Index: Views/Artists/Index.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Artists/Index.cshtml b/Views/Artists/Index.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709242168)
++++ b/Views/Artists/Index.cshtml	(date 1776709242168)
+@@ -0,0 +1,31 @@
++@model IEnumerable<ArtistReadDto>
++@{
++    ViewData["Title"] = "Artists";
++    Layout = "_AdminLayout";
++}
++
++<h2>Artists</h2>
++<p><a asp-action="Create">Create Artist</a></p>
++
++<table class="table">
++    <thead>
++    <tr><th>Name</th><th>Description</th><th></th></tr>
++    </thead>
++    <tbody>
++    @foreach (var item in Model)
++    {
++        <tr>
++            <td>@item.Name</td>
++            <td>@item.Description</td>
++            <td>
++                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
++                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
++                    @Html.AntiForgeryToken()
++                    <button type="submit">Delete</button>
++                </form>
++            </td>
++        </tr>
++    }
++    </tbody>
++</table>
++
+Index: Views/Artists/Create.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Artists/Create.cshtml b/Views/Artists/Create.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709244379)
++++ b/Views/Artists/Create.cshtml	(date 1776709244379)
+@@ -0,0 +1,15 @@
++@model ArtistCreateDto
++@{
++    ViewData["Title"] = "Create Artist";
++    Layout = "_AdminLayout";
++}
++
++<h2>Create Artist</h2>
++<form asp-action="Create" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="Name"></label><input asp-for="Name" /><span asp-validation-for="Name"></span></div>
++    <div><label asp-for="PictureUrl"></label><input asp-for="PictureUrl" /><span asp-validation-for="PictureUrl"></span></div>
++    <div><label asp-for="Description"></label><textarea asp-for="Description"></textarea></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: .idea/.idea.BoomFest/.idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.BoomFest/.idea/vcs.xml b/.idea/.idea.BoomFest/.idea/vcs.xml
+new file mode 100644
+--- /dev/null	(date 1774987247246)
++++ b/.idea/.idea.BoomFest/.idea/vcs.xml	(date 1774987247246)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: Views/Artists/Edit.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Artists/Edit.cshtml b/Views/Artists/Edit.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709245478)
++++ b/Views/Artists/Edit.cshtml	(date 1776709245478)
+@@ -0,0 +1,15 @@
++@model ArtistUpdateDto
++@{
++    ViewData["Title"] = "Edit Artist";
++    Layout = "_AdminLayout";
++}
++
++<h2>Edit Artist</h2>
++<form asp-action="Edit" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="Name"></label><input asp-for="Name" /><span asp-validation-for="Name"></span></div>
++    <div><label asp-for="PictureUrl"></label><input asp-for="PictureUrl" /><span asp-validation-for="PictureUrl"></span></div>
++    <div><label asp-for="Description"></label><textarea asp-for="Description"></textarea></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: .idea/.idea.BoomFest/.idea/.name
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.BoomFest/.idea/.name b/.idea/.idea.BoomFest/.idea/.name
+new file mode 100644
+--- /dev/null	(date 1776708190720)
++++ b/.idea/.idea.BoomFest/.idea/.name	(date 1776708190720)
+@@ -0,0 +1,1 @@
++BoomFest
+\ No newline at end of file
+Index: Views/Lineups/Index.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Lineups/Index.cshtml b/Views/Lineups/Index.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709247533)
++++ b/Views/Lineups/Index.cshtml	(date 1776709247533)
+@@ -0,0 +1,33 @@
++@model IEnumerable<LineupReadDto>
++@{
++    ViewData["Title"] = "Lineups";
++    Layout = "_AdminLayout";
++}
++
++<h2>Lineups</h2>
++<p><a asp-action="Create">Create Lineup</a></p>
++
++<table class="table">
++    <thead>
++    <tr><th>Festival</th><th>Artist</th><th>Start</th><th>End</th><th></th></tr>
++    </thead>
++    <tbody>
++    @foreach (var item in Model)
++    {
++        <tr>
++            <td>@item.FestivalId</td>
++            <td>@item.ArtistId</td>
++            <td>@item.StartDate</td>
++            <td>@item.EndDate</td>
++            <td>
++                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
++                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
++                    @Html.AntiForgeryToken()
++                    <button type="submit">Delete</button>
++                </form>
++            </td>
++        </tr>
++    }
++    </tbody>
++</table>
++
+Index: Views/Lineups/Create.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Lineups/Create.cshtml b/Views/Lineups/Create.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709247563)
++++ b/Views/Lineups/Create.cshtml	(date 1776709247563)
+@@ -0,0 +1,17 @@
++@model LineupCreateDto
++@{
++    ViewData["Title"] = "Create Lineup";
++    Layout = "_AdminLayout";
++}
++
++<h2>Create Lineup</h2>
++<form asp-action="Create" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="FestivalId"></label><input asp-for="FestivalId" /><span asp-validation-for="FestivalId"></span></div>
++    <div><label asp-for="ArtistId"></label><input asp-for="ArtistId" /><span asp-validation-for="ArtistId"></span></div>
++    <div><label asp-for="StartDate"></label><input asp-for="StartDate" type="datetime-local" /></div>
++    <div><label asp-for="EndDate"></label><input asp-for="EndDate" type="datetime-local" /></div>
++    <div><label asp-for="Description"></label><textarea asp-for="Description"></textarea></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: Program.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using BoomFest.Data;\r\nusing Microsoft.EntityFrameworkCore;\r\n\r\nAppContext.SetSwitch(\"Npgsql.EnableLegacyTimestampBehavior\", true);\r\n\r\nvar builder = WebApplication.CreateBuilder(args);\r\n\r\n// Add services to the container.\r\nbuilder.Services.AddControllersWithViews();\r\n\r\nbuilder.Services.AddDbContextPool<ApplicationDbContext>(options => \r\n    options.UseNpgsql(builder.Configuration.GetConnectionString(\"DefaultConnection\"))\r\n);\r\n\r\nbuilder.Services.AddStackExchangeRedisCache(options =>\r\n{\r\n    options.Configuration = builder.Configuration.GetConnectionString(\"Redis\");\r\n    options.Configuration = \"boomfest_\";\r\n});\r\n\r\nbuilder.Services.AddControllersWithViews();\r\n\r\nvar app = builder.Build();\r\n\r\n// Configure the HTTP request pipeline.\r\nif (!app.Environment.IsDevelopment())\r\n{\r\n    app.UseExceptionHandler(\"/Home/Error\");\r\n    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.\r\n    app.UseHsts();\r\n}\r\n\r\napp.UseHttpsRedirection();\r\napp.UseRouting();\r\n\r\napp.UseAuthorization();\r\n\r\napp.MapStaticAssets();\r\napp.MapControllerRoute(name: \"default\", pattern: \"{controller=Admin}/{action=Index}/{id?}\").WithStaticAssets();\r\n\r\napp.Run();\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Program.cs b/Program.cs
+--- a/Program.cs	(revision 39f985a08825b43722fd477fd274731195fee7b7)
++++ b/Program.cs	(date 1776709204701)
+@@ -1,4 +1,7 @@
+ using BoomFest.Data;
++using BoomFest.Repositories;
++using BoomFest.Services;
++using BoomFest.Services.Interfaces;
+ using Microsoft.EntityFrameworkCore;
+ 
+ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+@@ -18,7 +21,21 @@
+     options.Configuration = "boomfest_";
+ });
+ 
+-builder.Services.AddControllersWithViews();
++builder.Services.AddScoped<IArtistRepository, ArtistRepository>();
++builder.Services.AddScoped<IFestivalRepository, FestivalRepository>();
++builder.Services.AddScoped<ILineupRepository, LineupRepository>();
++builder.Services.AddScoped<IOrderRepository, OrderRepository>();
++builder.Services.AddScoped<ITicketCategoryRepository, TicketCategoryRepository>();
++builder.Services.AddScoped<ITicketRepository, TicketRepository>();
++builder.Services.AddScoped<IUserRepository, UserRepository>();
++
++builder.Services.AddScoped<IArtistService, ArtistService>();
++builder.Services.AddScoped<IFestivalService, FestivalService>();
++builder.Services.AddScoped<ILineupService, LineupService>();
++builder.Services.AddScoped<IOrderService, OrderService>();
++builder.Services.AddScoped<ITicketCategoryService, TicketCategoryService>();
++builder.Services.AddScoped<ITicketService, TicketService>();
++builder.Services.AddScoped<IUserService, UserService>();
+ 
+ var app = builder.Build();
+ 
+@@ -36,6 +53,7 @@
+ app.UseAuthorization();
+ 
+ app.MapStaticAssets();
++app.MapControllers();
+ app.MapControllerRoute(name: "default", pattern: "{controller=Admin}/{action=Index}/{id?}").WithStaticAssets();
+ 
+ app.Run();
+Index: Views/Lineups/Edit.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Lineups/Edit.cshtml b/Views/Lineups/Edit.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709247598)
++++ b/Views/Lineups/Edit.cshtml	(date 1776709247598)
+@@ -0,0 +1,17 @@
++@model LineupUpdateDto
++@{
++    ViewData["Title"] = "Edit Lineup";
++    Layout = "_AdminLayout";
++}
++
++<h2>Edit Lineup</h2>
++<form asp-action="Edit" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="FestivalId"></label><input asp-for="FestivalId" /><span asp-validation-for="FestivalId"></span></div>
++    <div><label asp-for="ArtistId"></label><input asp-for="ArtistId" /><span asp-validation-for="ArtistId"></span></div>
++    <div><label asp-for="StartDate"></label><input asp-for="StartDate" type="datetime-local" /></div>
++    <div><label asp-for="EndDate"></label><input asp-for="EndDate" type="datetime-local" /></div>
++    <div><label asp-for="Description"></label><textarea asp-for="Description"></textarea></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: Views/Orders/Index.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Orders/Index.cshtml b/Views/Orders/Index.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709264775)
++++ b/Views/Orders/Index.cshtml	(date 1776709264775)
+@@ -0,0 +1,33 @@
++@model IEnumerable<OrderReadDto>
++@{
++    ViewData["Title"] = "Orders";
++    Layout = "_AdminLayout";
++}
++
++<h2>Orders</h2>
++<p><a asp-action="Create">Create Order</a></p>
++
++<table class="table">
++    <thead>
++    <tr><th>User</th><th>Stripe Session</th><th>Total</th><th>Status</th><th></th></tr>
++    </thead>
++    <tbody>
++    @foreach (var item in Model)
++    {
++        <tr>
++            <td>@item.UserId</td>
++            <td>@item.StripeSessionId</td>
++            <td>@item.TotalPrice</td>
++            <td>@item.Status</td>
++            <td>
++                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
++                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
++                    @Html.AntiForgeryToken()
++                    <button type="submit">Delete</button>
++                </form>
++            </td>
++        </tr>
++    }
++    </tbody>
++</table>
++
+Index: Views/Orders/Create.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Orders/Create.cshtml b/Views/Orders/Create.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709264806)
++++ b/Views/Orders/Create.cshtml	(date 1776709264806)
+@@ -0,0 +1,16 @@
++@model OrderCreateDto
++@{
++    ViewData["Title"] = "Create Order";
++    Layout = "_AdminLayout";
++}
++
++<h2>Create Order</h2>
++<form asp-action="Create" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="UserId"></label><input asp-for="UserId" /><span asp-validation-for="UserId"></span></div>
++    <div><label asp-for="StripeSessionId"></label><input asp-for="StripeSessionId" /><span asp-validation-for="StripeSessionId"></span></div>
++    <div><label asp-for="TotalPrice"></label><input asp-for="TotalPrice" /><span asp-validation-for="TotalPrice"></span></div>
++    <div><label asp-for="Status"></label><select asp-for="Status" asp-items="Html.GetEnumSelectList<BoomFest.Enums.OrderStatus>()"></select></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: Views/Orders/Edit.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Orders/Edit.cshtml b/Views/Orders/Edit.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709268822)
++++ b/Views/Orders/Edit.cshtml	(date 1776709268822)
+@@ -0,0 +1,16 @@
++@model OrderUpdateDto
++@{
++    ViewData["Title"] = "Edit Order";
++    Layout = "_AdminLayout";
++}
++
++<h2>Edit Order</h2>
++<form asp-action="Edit" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="UserId"></label><input asp-for="UserId" /><span asp-validation-for="UserId"></span></div>
++    <div><label asp-for="StripeSessionId"></label><input asp-for="StripeSessionId" /><span asp-validation-for="StripeSessionId"></span></div>
++    <div><label asp-for="TotalPrice"></label><input asp-for="TotalPrice" /><span asp-validation-for="TotalPrice"></span></div>
++    <div><label asp-for="Status"></label><select asp-for="Status" asp-items="Html.GetEnumSelectList<BoomFest.Enums.OrderStatus>()"></select></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: Views/TicketCategories/Index.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/TicketCategories/Index.cshtml b/Views/TicketCategories/Index.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709269626)
++++ b/Views/TicketCategories/Index.cshtml	(date 1776709269626)
+@@ -0,0 +1,33 @@
++@model IEnumerable<TicketCategoryReadDto>
++@{
++    ViewData["Title"] = "Ticket Categories";
++    Layout = "_AdminLayout";
++}
++
++<h2>Ticket Categories</h2>
++<p><a asp-action="Create">Create Ticket Category</a></p>
++
++<table class="table">
++    <thead>
++    <tr><th>Name</th><th>Festival</th><th>Price</th><th>Stock</th><th></th></tr>
++    </thead>
++    <tbody>
++    @foreach (var item in Model)
++    {
++        <tr>
++            <td>@item.Name</td>
++            <td>@item.FestivalId</td>
++            <td>@item.Price</td>
++            <td>@item.Stock</td>
++            <td>
++                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
++                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
++                    @Html.AntiForgeryToken()
++                    <button type="submit">Delete</button>
++                </form>
++            </td>
++        </tr>
++    }
++    </tbody>
++</table>
++
+Index: Views/TicketCategories/Create.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/TicketCategories/Create.cshtml b/Views/TicketCategories/Create.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709269716)
++++ b/Views/TicketCategories/Create.cshtml	(date 1776709269716)
+@@ -0,0 +1,17 @@
++@model TicketCategoryCreateDto
++@{
++    ViewData["Title"] = "Create Ticket Category";
++    Layout = "_AdminLayout";
++}
++
++<h2>Create Ticket Category</h2>
++<form asp-action="Create" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="FestivalId"></label><input asp-for="FestivalId" /><span asp-validation-for="FestivalId"></span></div>
++    <div><label asp-for="Name"></label><input asp-for="Name" /><span asp-validation-for="Name"></span></div>
++    <div><label asp-for="Description"></label><textarea asp-for="Description"></textarea></div>
++    <div><label asp-for="Price"></label><input asp-for="Price" /></div>
++    <div><label asp-for="Stock"></label><input asp-for="Stock" /></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: Views/TicketCategories/Edit.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/TicketCategories/Edit.cshtml b/Views/TicketCategories/Edit.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709269770)
++++ b/Views/TicketCategories/Edit.cshtml	(date 1776709269770)
+@@ -0,0 +1,17 @@
++@model TicketCategoryUpdateDto
++@{
++    ViewData["Title"] = "Edit Ticket Category";
++    Layout = "_AdminLayout";
++}
++
++<h2>Edit Ticket Category</h2>
++<form asp-action="Edit" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="FestivalId"></label><input asp-for="FestivalId" /><span asp-validation-for="FestivalId"></span></div>
++    <div><label asp-for="Name"></label><input asp-for="Name" /><span asp-validation-for="Name"></span></div>
++    <div><label asp-for="Description"></label><textarea asp-for="Description"></textarea></div>
++    <div><label asp-for="Price"></label><input asp-for="Price" /></div>
++    <div><label asp-for="Stock"></label><input asp-for="Stock" /></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: Views/Tickets/Index.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Tickets/Index.cshtml b/Views/Tickets/Index.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709420913)
++++ b/Views/Tickets/Index.cshtml	(date 1776709420913)
+@@ -0,0 +1,32 @@
++@model IEnumerable<TicketReadDto>
++@{
++    ViewData["Title"] = "Tickets";
++    Layout = "_AdminLayout";
++}
++
++<h2>Tickets</h2>
++<p><a asp-action="Create">Create Ticket</a></p>
++
++<table class="table">
++    <thead>
++    <tr><th>Category</th><th>Order</th><th>Status</th><th></th></tr>
++    </thead>
++    <tbody>
++    @foreach (var item in Model)
++    {
++        <tr>
++            <td>@item.CategoryId</td>
++            <td>@item.OrderId</td>
++            <td>@item.Status</td>
++            <td>
++                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
++                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
++                    @Html.AntiForgeryToken()
++                    <button type="submit">Delete</button>
++                </form>
++            </td>
++        </tr>
++    }
++    </tbody>
++</table>
++
+Index: Views/Tickets/Create.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Tickets/Create.cshtml b/Views/Tickets/Create.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709423371)
++++ b/Views/Tickets/Create.cshtml	(date 1776709423371)
+@@ -0,0 +1,17 @@
++@model TicketCreateDto
++@{
++    ViewData["Title"] = "Create Ticket";
++    Layout = "_AdminLayout";
++}
++
++<h2>Create Ticket</h2>
++<form asp-action="Create" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="CategoryId"></label><input asp-for="CategoryId" /><span asp-validation-for="CategoryId"></span></div>
++    <div><label asp-for="OrderId"></label><input asp-for="OrderId" /><span asp-validation-for="OrderId"></span></div>
++    <div><label asp-for="Status"></label><select asp-for="Status" asp-items="Html.GetEnumSelectList<BoomFest.Enums.TicketStatus>()"></select></div>
++    <div><label asp-for="ScannedBy"></label><input asp-for="ScannedBy" /></div>
++    <div><label asp-for="ScannedAt"></label><input asp-for="ScannedAt" type="datetime-local" /></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: Views/Tickets/Edit.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Tickets/Edit.cshtml b/Views/Tickets/Edit.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709423381)
++++ b/Views/Tickets/Edit.cshtml	(date 1776709423381)
+@@ -0,0 +1,17 @@
++@model TicketUpdateDto
++@{
++    ViewData["Title"] = "Edit Ticket";
++    Layout = "_AdminLayout";
++}
++
++<h2>Edit Ticket</h2>
++<form asp-action="Edit" method="post">
++    @Html.AntiForgeryToken()
++    <div><label asp-for="CategoryId"></label><input asp-for="CategoryId" /><span asp-validation-for="CategoryId"></span></div>
++    <div><label asp-for="OrderId"></label><input asp-for="OrderId" /><span asp-validation-for="OrderId"></span></div>
++    <div><label asp-for="Status"></label><select asp-for="Status" asp-items="Html.GetEnumSelectList<BoomFest.Enums.TicketStatus>()"></select></div>
++    <div><label asp-for="ScannedBy"></label><input asp-for="ScannedBy" /></div>
++    <div><label asp-for="ScannedAt"></label><input asp-for="ScannedAt" type="datetime-local" /></div>
++    <button type="submit">Save</button>
++</form>
++
+Index: Views/Users/Index.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/Users/Index.cshtml b/Views/Users/Index.cshtml
+new file mode 100644
+--- /dev/null	(date 1776709437026)
++++ b/Views/Users/Index.cshtml	(date 1776709437026)
+@@ -0,0 +1,32 @@
++@model IEnumerable<UserReadDto>
++@{
++    ViewData["Title"] = "Users";
++    Layout = "_AdminLayout";
++}
++
++<h2>Users</h2>
++<p><a asp-action="Create">Create User</a></p>
++
++<table class="table">
++    <thead>
++    <tr><th>Name</th><th>Email</th><th>Role</th><th></th></tr>
++    </thead>
++    <tbody>
++    @foreach (var item in Model)
++    {
++        <tr>
++            <td>@item.FirstName @item.LastName</td>
++            <td>@item.Email</td>
++            <td>@item.Role</td>
++            <td>
++                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
++                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;">
++                    @Html.AntiForgeryToken()
++                    <button type="submit">Delete</button>
++                </form>
++            </td>
++        </tr>
++    }
++    </tbody>
++</table>
++
+Index: .idea/.idea.BoomFest/.idea/encodings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.idea.BoomFest/.idea/encodings.xml b/.idea/.idea.BoomFest/.idea/encodings.xml
+new file mode 100644
+--- /dev/null	(date 1774987217091)
++++ b/.idea/.idea.BoomFest/.idea/encodings.xml	(date 1774987217091)
+@@ -0,0 +1,4 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="Encoding" addBOMForNewFiles="with BOM under Windows, with no BOM otherwise" />
++</project>
+\ No newline at end of file
+Index: Migrations/20260329144806_InitialMigration.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Migrations/20260329144806_InitialMigration.cs b/Migrations/20260331202303_InitialCreate.cs
+rename from Migrations/20260329144806_InitialMigration.cs
+rename to Migrations/20260331202303_InitialCreate.cs
+--- a/Migrations/20260329144806_InitialMigration.cs	(revision 39f985a08825b43722fd477fd274731195fee7b7)
++++ b/Migrations/20260331202303_InitialCreate.cs	(date 1774988583770)
+@@ -6,7 +6,7 @@
+ namespace BoomFest.Migrations
+ {
+     /// <inheritdoc />
+-    public partial class InitialMigration : Migration
++    public partial class InitialCreate : Migration
+     {
+         /// <inheritdoc />
+         protected override void Up(MigrationBuilder migrationBuilder)
+@@ -19,8 +19,8 @@
+                     Name = table.Column<string>(type: "text", nullable: false),
+                     PictureUrl = table.Column<string>(type: "text", nullable: true),
+                     Description = table.Column<string>(type: "text", nullable: true),
+-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
++                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                 },
+                 constraints: table =>
+                 {
+@@ -36,13 +36,13 @@
+                     PictureUrl = table.Column<string>(type: "text", nullable: true),
+                     Description = table.Column<string>(type: "text", nullable: true),
+                     Status = table.Column<int>(type: "integer", nullable: false),
+-                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
++                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                     Country = table.Column<string>(type: "text", nullable: false),
+                     City = table.Column<string>(type: "text", nullable: false),
+                     Location = table.Column<string>(type: "text", nullable: false),
+-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
++                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                 },
+                 constraints: table =>
+                 {
+@@ -59,9 +59,9 @@
+                     Email = table.Column<string>(type: "text", nullable: false),
+                     Password = table.Column<string>(type: "text", nullable: false),
+                     Role = table.Column<int>(type: "integer", nullable: false),
+-                    VerifiedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
++                    VerifiedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
++                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                 },
+                 constraints: table =>
+                 {
+@@ -76,10 +76,10 @@
+                     FestivalId = table.Column<Guid>(type: "uuid", nullable: false),
+                     ArtistId = table.Column<Guid>(type: "uuid", nullable: false),
+                     Description = table.Column<string>(type: "text", nullable: true),
+-                    StartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
++                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                 },
+                 constraints: table =>
+                 {
+@@ -108,8 +108,8 @@
+                     Description = table.Column<string>(type: "text", nullable: true),
+                     Price = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                     Stock = table.Column<int>(type: "integer", nullable: false),
+-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
++                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                 },
+                 constraints: table =>
+                 {
+@@ -131,8 +131,8 @@
+                     StripeSessionId = table.Column<string>(type: "text", nullable: false),
+                     TotalPrice = table.Column<decimal>(type: "numeric(10,2)", precision: 10, scale: 2, nullable: false),
+                     Status = table.Column<int>(type: "integer", nullable: false),
+-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
++                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                 },
+                 constraints: table =>
+                 {
+@@ -154,11 +154,11 @@
+                     OrderId = table.Column<Guid>(type: "uuid", nullable: false),
+                     QrCode = table.Column<Guid>(type: "uuid", nullable: false),
+                     Status = table.Column<int>(type: "integer", nullable: false),
+-                    ScannedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
++                    ScannedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                     ScannedBy = table.Column<Guid>(type: "uuid", nullable: true),
+                     ScannerId = table.Column<Guid>(type: "uuid", nullable: true),
+-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
++                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
++                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                 },
+                 constraints: table =>
+                 {
+Index: Migrations/20260329144806_InitialMigration.Designer.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Migrations/20260329144806_InitialMigration.Designer.cs b/Migrations/20260331202303_InitialCreate.Designer.cs
+rename from Migrations/20260329144806_InitialMigration.Designer.cs
+rename to Migrations/20260331202303_InitialCreate.Designer.cs
+--- a/Migrations/20260329144806_InitialMigration.Designer.cs	(revision 39f985a08825b43722fd477fd274731195fee7b7)
++++ b/Migrations/20260331202303_InitialCreate.Designer.cs	(date 1774988583770)
+@@ -1,19 +1,19 @@
+ // <auto-generated />
+ using System;
++using BoomFest.Data;
+ using Microsoft.EntityFrameworkCore;
+ using Microsoft.EntityFrameworkCore.Infrastructure;
+ using Microsoft.EntityFrameworkCore.Migrations;
+ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+-using BoomFest.Data;
+ 
+ #nullable disable
+ 
+ namespace BoomFest.Migrations
+ {
+     [DbContext(typeof(ApplicationDbContext))]
+-    [Migration("20260329144806_InitialMigration")]
+-    partial class InitialMigration
++    [Migration("20260331202303_InitialCreate")]
++    partial class InitialCreate
+     {
+         /// <inheritdoc />
+         protected override void BuildTargetModel(ModelBuilder modelBuilder)
+@@ -25,14 +25,14 @@
+ 
+             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+ 
+-            modelBuilder.Entity("boomfest.Models.Artist", b =>
++            modelBuilder.Entity("BoomFest.Models.Artist", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Description")
+                         .HasColumnType("text");
+@@ -45,14 +45,14 @@
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+                     b.ToTable("Artists");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Festival", b =>
++            modelBuilder.Entity("BoomFest.Models.Festival", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+@@ -67,13 +67,13 @@
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Description")
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("EndDate")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Location")
+                         .IsRequired()
+@@ -83,7 +83,7 @@
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("StartDate")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<int>("Status")
+                         .HasColumnType("integer");
+@@ -93,14 +93,14 @@
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+                     b.ToTable("Festivals");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Lineup", b =>
++            modelBuilder.Entity("BoomFest.Models.Lineup", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+@@ -110,22 +110,22 @@
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Description")
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("EndDate")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<Guid>("FestivalId")
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("StartDate")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+@@ -136,14 +136,14 @@
+                     b.ToTable("Lineups");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Order", b =>
++            modelBuilder.Entity("BoomFest.Models.Order", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<int>("Status")
+                         .HasColumnType("integer");
+@@ -157,7 +157,7 @@
+                         .HasColumnType("numeric(10,2)");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<Guid>("UserId")
+                         .HasColumnType("uuid");
+@@ -169,7 +169,7 @@
+                     b.ToTable("Orders");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Ticket", b =>
++            modelBuilder.Entity("BoomFest.Models.Ticket", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+@@ -179,7 +179,7 @@
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<Guid>("OrderId")
+                         .HasColumnType("uuid");
+@@ -188,7 +188,7 @@
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime?>("ScannedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<Guid?>("ScannedBy")
+                         .HasColumnType("uuid");
+@@ -200,7 +200,7 @@
+                         .HasColumnType("integer");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+@@ -213,14 +213,14 @@
+                     b.ToTable("Tickets");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.TicketCategory", b =>
++            modelBuilder.Entity("BoomFest.Models.TicketCategory", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Description")
+                         .HasColumnType("text");
+@@ -240,7 +240,7 @@
+                         .HasColumnType("integer");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+@@ -249,14 +249,14 @@
+                     b.ToTable("TicketCategories");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.User", b =>
++            modelBuilder.Entity("BoomFest.Models.User", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Email")
+                         .IsRequired()
+@@ -278,10 +278,10 @@
+                         .HasColumnType("integer");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<DateTime?>("VerifiedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+@@ -291,15 +291,15 @@
+                     b.ToTable("Users");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Lineup", b =>
++            modelBuilder.Entity("BoomFest.Models.Lineup", b =>
+                 {
+-                    b.HasOne("boomfest.Models.Artist", "Artist")
++                    b.HasOne("BoomFest.Models.Artist", "Artist")
+                         .WithMany()
+                         .HasForeignKey("ArtistId")
+                         .OnDelete(DeleteBehavior.Cascade)
+                         .IsRequired();
+ 
+-                    b.HasOne("boomfest.Models.Festival", "Festival")
++                    b.HasOne("BoomFest.Models.Festival", "Festival")
+                         .WithMany("Lineups")
+                         .HasForeignKey("FestivalId")
+                         .OnDelete(DeleteBehavior.Cascade)
+@@ -310,9 +310,9 @@
+                     b.Navigation("Festival");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Order", b =>
++            modelBuilder.Entity("BoomFest.Models.Order", b =>
+                 {
+-                    b.HasOne("boomfest.Models.User", "User")
++                    b.HasOne("BoomFest.Models.User", "User")
+                         .WithMany("Orders")
+                         .HasForeignKey("UserId")
+                         .OnDelete(DeleteBehavior.Cascade)
+@@ -321,21 +321,21 @@
+                     b.Navigation("User");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Ticket", b =>
++            modelBuilder.Entity("BoomFest.Models.Ticket", b =>
+                 {
+-                    b.HasOne("boomfest.Models.TicketCategory", "Category")
++                    b.HasOne("BoomFest.Models.TicketCategory", "Category")
+                         .WithMany("Tickets")
+                         .HasForeignKey("CategoryId")
+                         .OnDelete(DeleteBehavior.Cascade)
+                         .IsRequired();
+ 
+-                    b.HasOne("boomfest.Models.Order", "Order")
++                    b.HasOne("BoomFest.Models.Order", "Order")
+                         .WithMany("Tickets")
+                         .HasForeignKey("OrderId")
+                         .OnDelete(DeleteBehavior.Cascade)
+                         .IsRequired();
+ 
+-                    b.HasOne("boomfest.Models.User", "Scanner")
++                    b.HasOne("BoomFest.Models.User", "Scanner")
+                         .WithMany()
+                         .HasForeignKey("ScannerId");
+ 
+@@ -346,9 +346,9 @@
+                     b.Navigation("Scanner");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.TicketCategory", b =>
++            modelBuilder.Entity("BoomFest.Models.TicketCategory", b =>
+                 {
+-                    b.HasOne("boomfest.Models.Festival", "Festival")
++                    b.HasOne("BoomFest.Models.Festival", "Festival")
+                         .WithMany("TicketCategories")
+                         .HasForeignKey("FestivalId")
+                         .OnDelete(DeleteBehavior.Cascade)
+@@ -357,24 +357,24 @@
+                     b.Navigation("Festival");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Festival", b =>
++            modelBuilder.Entity("BoomFest.Models.Festival", b =>
+                 {
+                     b.Navigation("Lineups");
+ 
+                     b.Navigation("TicketCategories");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Order", b =>
++            modelBuilder.Entity("BoomFest.Models.Order", b =>
+                 {
+                     b.Navigation("Tickets");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.TicketCategory", b =>
++            modelBuilder.Entity("BoomFest.Models.TicketCategory", b =>
+                 {
+                     b.Navigation("Tickets");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.User", b =>
++            modelBuilder.Entity("BoomFest.Models.User", b =>
+                 {
+                     b.Navigation("Orders");
+                 });
+Index: Migrations/ApplicationDbContextModelSnapshot.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>// <auto-generated />\r\nusing System;\r\nusing Microsoft.EntityFrameworkCore;\r\nusing Microsoft.EntityFrameworkCore.Infrastructure;\r\nusing Microsoft.EntityFrameworkCore.Storage.ValueConversion;\r\nusing Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;\r\nusing BoomFest.Data;\r\n\r\n#nullable disable\r\n\r\nnamespace BoomFest.Migrations\r\n{\r\n    [DbContext(typeof(ApplicationDbContext))]\r\n    partial class ApplicationDbContextModelSnapshot : ModelSnapshot\r\n    {\r\n        protected override void BuildModel(ModelBuilder modelBuilder)\r\n        {\r\n#pragma warning disable 612, 618\r\n            modelBuilder\r\n                .HasAnnotation(\"ProductVersion\", \"10.0.5\")\r\n                .HasAnnotation(\"Relational:MaxIdentifierLength\", 63);\r\n\r\n            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Artist\", b =>\r\n                {\r\n                    b.Property<Guid>(\"Id\")\r\n                        .ValueGeneratedOnAdd()\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<DateTime>(\"CreatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<string>(\"Description\")\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<string>(\"Name\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<string>(\"PictureUrl\")\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<DateTime>(\"UpdatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.HasKey(\"Id\");\r\n\r\n                    b.ToTable(\"Artists\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Festival\", b =>\r\n                {\r\n                    b.Property<Guid>(\"Id\")\r\n                        .ValueGeneratedOnAdd()\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<string>(\"City\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<string>(\"Country\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<DateTime>(\"CreatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<string>(\"Description\")\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<DateTime>(\"EndDate\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<string>(\"Location\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<string>(\"PictureUrl\")\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<DateTime>(\"StartDate\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<int>(\"Status\")\r\n                        .HasColumnType(\"integer\");\r\n\r\n                    b.Property<string>(\"Title\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<DateTime>(\"UpdatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.HasKey(\"Id\");\r\n\r\n                    b.ToTable(\"Festivals\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Lineup\", b =>\r\n                {\r\n                    b.Property<Guid>(\"Id\")\r\n                        .ValueGeneratedOnAdd()\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<Guid>(\"ArtistId\")\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<DateTime>(\"CreatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<string>(\"Description\")\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<DateTime>(\"EndDate\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<Guid>(\"FestivalId\")\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<DateTime>(\"StartDate\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<DateTime>(\"UpdatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.HasKey(\"Id\");\r\n\r\n                    b.HasIndex(\"ArtistId\");\r\n\r\n                    b.HasIndex(\"FestivalId\");\r\n\r\n                    b.ToTable(\"Lineups\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Order\", b =>\r\n                {\r\n                    b.Property<Guid>(\"Id\")\r\n                        .ValueGeneratedOnAdd()\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<DateTime>(\"CreatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<int>(\"Status\")\r\n                        .HasColumnType(\"integer\");\r\n\r\n                    b.Property<string>(\"StripeSessionId\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<decimal>(\"TotalPrice\")\r\n                        .HasPrecision(10, 2)\r\n                        .HasColumnType(\"numeric(10,2)\");\r\n\r\n                    b.Property<DateTime>(\"UpdatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<Guid>(\"UserId\")\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.HasKey(\"Id\");\r\n\r\n                    b.HasIndex(\"UserId\");\r\n\r\n                    b.ToTable(\"Orders\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Ticket\", b =>\r\n                {\r\n                    b.Property<Guid>(\"Id\")\r\n                        .ValueGeneratedOnAdd()\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<Guid>(\"CategoryId\")\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<DateTime>(\"CreatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<Guid>(\"OrderId\")\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<Guid>(\"QrCode\")\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<DateTime?>(\"ScannedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<Guid?>(\"ScannedBy\")\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<Guid?>(\"ScannerId\")\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<int>(\"Status\")\r\n                        .HasColumnType(\"integer\");\r\n\r\n                    b.Property<DateTime>(\"UpdatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.HasKey(\"Id\");\r\n\r\n                    b.HasIndex(\"CategoryId\");\r\n\r\n                    b.HasIndex(\"OrderId\");\r\n\r\n                    b.HasIndex(\"ScannerId\");\r\n\r\n                    b.ToTable(\"Tickets\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.TicketCategory\", b =>\r\n                {\r\n                    b.Property<Guid>(\"Id\")\r\n                        .ValueGeneratedOnAdd()\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<DateTime>(\"CreatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<string>(\"Description\")\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<Guid>(\"FestivalId\")\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<string>(\"Name\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<decimal>(\"Price\")\r\n                        .HasPrecision(10, 2)\r\n                        .HasColumnType(\"numeric(10,2)\");\r\n\r\n                    b.Property<int>(\"Stock\")\r\n                        .HasColumnType(\"integer\");\r\n\r\n                    b.Property<DateTime>(\"UpdatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.HasKey(\"Id\");\r\n\r\n                    b.HasIndex(\"FestivalId\");\r\n\r\n                    b.ToTable(\"TicketCategories\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.User\", b =>\r\n                {\r\n                    b.Property<Guid>(\"Id\")\r\n                        .ValueGeneratedOnAdd()\r\n                        .HasColumnType(\"uuid\");\r\n\r\n                    b.Property<DateTime>(\"CreatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<string>(\"Email\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<string>(\"FirstName\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<string>(\"LastName\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<string>(\"Password\")\r\n                        .IsRequired()\r\n                        .HasColumnType(\"text\");\r\n\r\n                    b.Property<int>(\"Role\")\r\n                        .HasColumnType(\"integer\");\r\n\r\n                    b.Property<DateTime>(\"UpdatedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.Property<DateTime?>(\"VerifiedAt\")\r\n                        .HasColumnType(\"timestamp with time zone\");\r\n\r\n                    b.HasKey(\"Id\");\r\n\r\n                    b.HasIndex(\"Email\")\r\n                        .IsUnique();\r\n\r\n                    b.ToTable(\"Users\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Lineup\", b =>\r\n                {\r\n                    b.HasOne(\"boomfest.Models.Artist\", \"Artist\")\r\n                        .WithMany()\r\n                        .HasForeignKey(\"ArtistId\")\r\n                        .OnDelete(DeleteBehavior.Cascade)\r\n                        .IsRequired();\r\n\r\n                    b.HasOne(\"boomfest.Models.Festival\", \"Festival\")\r\n                        .WithMany(\"Lineups\")\r\n                        .HasForeignKey(\"FestivalId\")\r\n                        .OnDelete(DeleteBehavior.Cascade)\r\n                        .IsRequired();\r\n\r\n                    b.Navigation(\"Artist\");\r\n\r\n                    b.Navigation(\"Festival\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Order\", b =>\r\n                {\r\n                    b.HasOne(\"boomfest.Models.User\", \"User\")\r\n                        .WithMany(\"Orders\")\r\n                        .HasForeignKey(\"UserId\")\r\n                        .OnDelete(DeleteBehavior.Cascade)\r\n                        .IsRequired();\r\n\r\n                    b.Navigation(\"User\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Ticket\", b =>\r\n                {\r\n                    b.HasOne(\"boomfest.Models.TicketCategory\", \"Category\")\r\n                        .WithMany(\"Tickets\")\r\n                        .HasForeignKey(\"CategoryId\")\r\n                        .OnDelete(DeleteBehavior.Cascade)\r\n                        .IsRequired();\r\n\r\n                    b.HasOne(\"boomfest.Models.Order\", \"Order\")\r\n                        .WithMany(\"Tickets\")\r\n                        .HasForeignKey(\"OrderId\")\r\n                        .OnDelete(DeleteBehavior.Cascade)\r\n                        .IsRequired();\r\n\r\n                    b.HasOne(\"boomfest.Models.User\", \"Scanner\")\r\n                        .WithMany()\r\n                        .HasForeignKey(\"ScannerId\");\r\n\r\n                    b.Navigation(\"Category\");\r\n\r\n                    b.Navigation(\"Order\");\r\n\r\n                    b.Navigation(\"Scanner\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.TicketCategory\", b =>\r\n                {\r\n                    b.HasOne(\"boomfest.Models.Festival\", \"Festival\")\r\n                        .WithMany(\"TicketCategories\")\r\n                        .HasForeignKey(\"FestivalId\")\r\n                        .OnDelete(DeleteBehavior.Cascade)\r\n                        .IsRequired();\r\n\r\n                    b.Navigation(\"Festival\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Festival\", b =>\r\n                {\r\n                    b.Navigation(\"Lineups\");\r\n\r\n                    b.Navigation(\"TicketCategories\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.Order\", b =>\r\n                {\r\n                    b.Navigation(\"Tickets\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.TicketCategory\", b =>\r\n                {\r\n                    b.Navigation(\"Tickets\");\r\n                });\r\n\r\n            modelBuilder.Entity(\"boomfest.Models.User\", b =>\r\n                {\r\n                    b.Navigation(\"Orders\");\r\n                });\r\n#pragma warning restore 612, 618\r\n        }\r\n    }\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Migrations/ApplicationDbContextModelSnapshot.cs b/Migrations/ApplicationDbContextModelSnapshot.cs
+--- a/Migrations/ApplicationDbContextModelSnapshot.cs	(revision 39f985a08825b43722fd477fd274731195fee7b7)
++++ b/Migrations/ApplicationDbContextModelSnapshot.cs	(date 1774988583770)
+@@ -1,10 +1,10 @@
+ // <auto-generated />
+ using System;
++using BoomFest.Data;
+ using Microsoft.EntityFrameworkCore;
+ using Microsoft.EntityFrameworkCore.Infrastructure;
+ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+-using BoomFest.Data;
+ 
+ #nullable disable
+ 
+@@ -22,14 +22,14 @@
+ 
+             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+ 
+-            modelBuilder.Entity("boomfest.Models.Artist", b =>
++            modelBuilder.Entity("BoomFest.Models.Artist", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Description")
+                         .HasColumnType("text");
+@@ -42,14 +42,14 @@
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+                     b.ToTable("Artists");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Festival", b =>
++            modelBuilder.Entity("BoomFest.Models.Festival", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+@@ -64,13 +64,13 @@
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Description")
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("EndDate")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Location")
+                         .IsRequired()
+@@ -80,7 +80,7 @@
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("StartDate")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<int>("Status")
+                         .HasColumnType("integer");
+@@ -90,14 +90,14 @@
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+                     b.ToTable("Festivals");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Lineup", b =>
++            modelBuilder.Entity("BoomFest.Models.Lineup", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+@@ -107,22 +107,22 @@
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Description")
+                         .HasColumnType("text");
+ 
+                     b.Property<DateTime>("EndDate")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<Guid>("FestivalId")
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("StartDate")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+@@ -133,14 +133,14 @@
+                     b.ToTable("Lineups");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Order", b =>
++            modelBuilder.Entity("BoomFest.Models.Order", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<int>("Status")
+                         .HasColumnType("integer");
+@@ -154,7 +154,7 @@
+                         .HasColumnType("numeric(10,2)");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<Guid>("UserId")
+                         .HasColumnType("uuid");
+@@ -166,7 +166,7 @@
+                     b.ToTable("Orders");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Ticket", b =>
++            modelBuilder.Entity("BoomFest.Models.Ticket", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+@@ -176,7 +176,7 @@
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<Guid>("OrderId")
+                         .HasColumnType("uuid");
+@@ -185,7 +185,7 @@
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime?>("ScannedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<Guid?>("ScannedBy")
+                         .HasColumnType("uuid");
+@@ -197,7 +197,7 @@
+                         .HasColumnType("integer");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+@@ -210,14 +210,14 @@
+                     b.ToTable("Tickets");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.TicketCategory", b =>
++            modelBuilder.Entity("BoomFest.Models.TicketCategory", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Description")
+                         .HasColumnType("text");
+@@ -237,7 +237,7 @@
+                         .HasColumnType("integer");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+@@ -246,14 +246,14 @@
+                     b.ToTable("TicketCategories");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.User", b =>
++            modelBuilder.Entity("BoomFest.Models.User", b =>
+                 {
+                     b.Property<Guid>("Id")
+                         .ValueGeneratedOnAdd()
+                         .HasColumnType("uuid");
+ 
+                     b.Property<DateTime>("CreatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<string>("Email")
+                         .IsRequired()
+@@ -275,10 +275,10 @@
+                         .HasColumnType("integer");
+ 
+                     b.Property<DateTime>("UpdatedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.Property<DateTime?>("VerifiedAt")
+-                        .HasColumnType("timestamp with time zone");
++                        .HasColumnType("timestamp without time zone");
+ 
+                     b.HasKey("Id");
+ 
+@@ -288,15 +288,15 @@
+                     b.ToTable("Users");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Lineup", b =>
++            modelBuilder.Entity("BoomFest.Models.Lineup", b =>
+                 {
+-                    b.HasOne("boomfest.Models.Artist", "Artist")
++                    b.HasOne("BoomFest.Models.Artist", "Artist")
+                         .WithMany()
+                         .HasForeignKey("ArtistId")
+                         .OnDelete(DeleteBehavior.Cascade)
+                         .IsRequired();
+ 
+-                    b.HasOne("boomfest.Models.Festival", "Festival")
++                    b.HasOne("BoomFest.Models.Festival", "Festival")
+                         .WithMany("Lineups")
+                         .HasForeignKey("FestivalId")
+                         .OnDelete(DeleteBehavior.Cascade)
+@@ -307,9 +307,9 @@
+                     b.Navigation("Festival");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Order", b =>
++            modelBuilder.Entity("BoomFest.Models.Order", b =>
+                 {
+-                    b.HasOne("boomfest.Models.User", "User")
++                    b.HasOne("BoomFest.Models.User", "User")
+                         .WithMany("Orders")
+                         .HasForeignKey("UserId")
+                         .OnDelete(DeleteBehavior.Cascade)
+@@ -318,21 +318,21 @@
+                     b.Navigation("User");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Ticket", b =>
++            modelBuilder.Entity("BoomFest.Models.Ticket", b =>
+                 {
+-                    b.HasOne("boomfest.Models.TicketCategory", "Category")
++                    b.HasOne("BoomFest.Models.TicketCategory", "Category")
+                         .WithMany("Tickets")
+                         .HasForeignKey("CategoryId")
+                         .OnDelete(DeleteBehavior.Cascade)
+                         .IsRequired();
+ 
+-                    b.HasOne("boomfest.Models.Order", "Order")
++                    b.HasOne("BoomFest.Models.Order", "Order")
+                         .WithMany("Tickets")
+                         .HasForeignKey("OrderId")
+                         .OnDelete(DeleteBehavior.Cascade)
+                         .IsRequired();
+ 
+-                    b.HasOne("boomfest.Models.User", "Scanner")
++                    b.HasOne("BoomFest.Models.User", "Scanner")
+                         .WithMany()
+                         .HasForeignKey("ScannerId");
+ 
+@@ -343,9 +343,9 @@
+                     b.Navigation("Scanner");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.TicketCategory", b =>
++            modelBuilder.Entity("BoomFest.Models.TicketCategory", b =>
+                 {
+-                    b.HasOne("boomfest.Models.Festival", "Festival")
++                    b.HasOne("BoomFest.Models.Festival", "Festival")
+                         .WithMany("TicketCategories")
+                         .HasForeignKey("FestivalId")
+                         .OnDelete(DeleteBehavior.Cascade)
+@@ -354,24 +354,24 @@
+                     b.Navigation("Festival");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Festival", b =>
++            modelBuilder.Entity("BoomFest.Models.Festival", b =>
+                 {
+                     b.Navigation("Lineups");
+ 
+                     b.Navigation("TicketCategories");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.Order", b =>
++            modelBuilder.Entity("BoomFest.Models.Order", b =>
+                 {
+                     b.Navigation("Tickets");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.TicketCategory", b =>
++            modelBuilder.Entity("BoomFest.Models.TicketCategory", b =>
+                 {
+                     b.Navigation("Tickets");
+                 });
+ 
+-            modelBuilder.Entity("boomfest.Models.User", b =>
++            modelBuilder.Entity("BoomFest.Models.User", b =>
+                 {
+                     b.Navigation("Orders");
+                 });
+Index: Views/_ViewImports.cshtml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>@using BoomFest\r\n@using BoomFest.Models\r\n@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Views/_ViewImports.cshtml b/Views/_ViewImports.cshtml
+--- a/Views/_ViewImports.cshtml	(revision 39f985a08825b43722fd477fd274731195fee7b7)
++++ b/Views/_ViewImports.cshtml	(date 1776709215550)
+@@ -1,3 +1,5 @@
+ @using BoomFest
++@using BoomFest.Dtos
++@using BoomFest.Dtos.Api
+ @using BoomFest.Models
+ @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+Index: Controllers/FestivalsController.cs
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>using Microsoft.AspNetCore.Mvc;\r\nusing Microsoft.EntityFrameworkCore;\r\nusing BoomFest.Data;\r\nusing BoomFest.Dtos;\r\nusing BoomFest.Models;\r\n\r\nnamespace BoomFest.Controllers;\r\n\r\n[Route(\"Admin/[controller]\")]\r\npublic class FestivalsController : Controller\r\n{\r\n    private readonly ApplicationDbContext _context;\r\n\r\n    public FestivalsController(ApplicationDbContext context)\r\n    {\r\n        _context = context;\r\n    }\r\n\r\n    [HttpGet]\r\n    public async Task<IActionResult> Index()\r\n    {\r\n        var festivals = await _context.Festivals\r\n            .AsNoTracking()\r\n            .ToListAsync();\r\n\r\n        return View(festivals);\r\n    }\r\n\r\n    [HttpGet(\"Create\")]\r\n    public IActionResult Create()\r\n    {\r\n        return View(new FestivalDto());\r\n    }\r\n\r\n    [HttpPost(\"Create\")]\r\n    public async Task<IActionResult> Create(FestivalDto festivalDto)\r\n    {\r\n        if (!ModelState.IsValid)\r\n        {\r\n            return View(festivalDto);\r\n        }\r\n\r\n        var festival = new Festival\r\n        {\r\n            Title = festivalDto.Title,\r\n            Description = festivalDto.Description,\r\n            Location = festivalDto.Location,\r\n            City = festivalDto.City,\r\n            Country = festivalDto.Country,\r\n            Status = festivalDto.Status,\r\n            StartDate = festivalDto.StartDate,\r\n            EndDate = festivalDto.EndDate\r\n        };\r\n\r\n\r\n        _context.Festivals.Add(festival);\r\n        await _context.SaveChangesAsync();\r\n        \r\n        return RedirectToAction(nameof(Index));\r\n    }\r\n\r\n    [HttpGet(\"Edit/{id:guid}\")]\r\n    public async Task<IActionResult> Edit(Guid id)\r\n    {\r\n        var festival = await _context.Festivals.FindAsync(id);\r\n\r\n        if (festival == null)\r\n        {\r\n            return NotFound();\r\n        }\r\n\r\n        var festivalDto = new FestivalDto\r\n        {\r\n            Id = festival.Id,\r\n            Title = festival.Title,\r\n            Description = festival.Description,\r\n            Location = festival.Location,\r\n            City = festival.City,\r\n            Country = festival.Country,\r\n            Status = festival.Status,\r\n            StartDate = festival.StartDate,\r\n            EndDate = festival.EndDate,\r\n            ExistingPictureUrl = festival.PictureUrl\r\n        };\r\n\r\n        return View(festivalDto);\r\n    }\r\n\r\n    [HttpPost(\"Edit/{id:guid}\")]\r\n    public async Task<IActionResult> Edit(Guid id, FestivalDto festivalDto)\r\n    {\r\n        if (id != festivalDto.Id)\r\n        {\r\n            return NotFound();\r\n        }\r\n\r\n        if (!ModelState.IsValid)\r\n        {\r\n            return View(festivalDto);\r\n        }\r\n\r\n        var festival = await _context.Festivals.FindAsync(id);\r\n\r\n        if (festival == null)\r\n        {\r\n            return NotFound();\r\n        }\r\n\r\n        festival.Title = festivalDto.Title;\r\n        festival.Description = festivalDto.Description;\r\n        festival.Location = festivalDto.Location;\r\n        festival.City = festivalDto.City;\r\n        festival.Country = festivalDto.Country;\r\n        festival.Status = festivalDto.Status;\r\n        festival.StartDate = festivalDto.StartDate;\r\n        festival.EndDate = festivalDto.EndDate;\r\n\r\n        await _context.SaveChangesAsync();\r\n        return RedirectToAction(nameof(Index));\r\n    }\r\n\r\n    [HttpPost(\"Delete/{id:guid}\")]\r\n    [ValidateAntiForgeryToken]\r\n    public async Task<IActionResult> Delete(Guid id)\r\n    {\r\n        var festival = await _context.Festivals.FindAsync(id);\r\n        if (festival != null)\r\n        {\r\n            _context.Festivals.Remove(festival);\r\n            await _context.SaveChangesAsync();\r\n        }\r\n        return RedirectToAction(nameof(Index));\r\n    }\r\n\r\n    private bool FestivalExists(Guid id) => _context.Festivals.Any(e => e.Id == id);\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Controllers/FestivalsController.cs b/Controllers/FestivalsController.cs
+--- a/Controllers/FestivalsController.cs	(revision 39f985a08825b43722fd477fd274731195fee7b7)
++++ b/Controllers/FestivalsController.cs	(date 1776709196378)
+@@ -1,27 +1,40 @@
+ using Microsoft.AspNetCore.Mvc;
+-using Microsoft.EntityFrameworkCore;
+-using BoomFest.Data;
+ using BoomFest.Dtos;
++using BoomFest.Dtos.Api;
+ using BoomFest.Models;
++using BoomFest.Services;
++using BoomFest.Services.Interfaces;
+ 
+ namespace BoomFest.Controllers;
+ 
+ [Route("Admin/[controller]")]
+ public class FestivalsController : Controller
+ {
+-    private readonly ApplicationDbContext _context;
++    private readonly IFestivalService _service;
+ 
+-    public FestivalsController(ApplicationDbContext context)
++    public FestivalsController(IFestivalService service)
+     {
+-        _context = context;
++        _service = service;
+     }
+ 
+     [HttpGet]
+     public async Task<IActionResult> Index()
+     {
+-        var festivals = await _context.Festivals
+-            .AsNoTracking()
+-            .ToListAsync();
++        var festivals = (await _service.GetAllAsync()).Select(festival => new Festival
++        {
++            Id = festival.Id,
++            Title = festival.Title,
++            Description = festival.Description,
++            PictureUrl = festival.PictureUrl,
++            Status = festival.Status,
++            StartDate = festival.StartDate,
++            EndDate = festival.EndDate,
++            Country = festival.Country,
++            City = festival.City,
++            Location = festival.Location,
++            CreatedAt = festival.CreatedAt,
++            UpdatedAt = festival.UpdatedAt
++        });
+ 
+         return View(festivals);
+     }
+@@ -40,29 +53,34 @@
+             return View(festivalDto);
+         }
+ 
+-        var festival = new Festival
++        try
+         {
+-            Title = festivalDto.Title,
+-            Description = festivalDto.Description,
+-            Location = festivalDto.Location,
+-            City = festivalDto.City,
+-            Country = festivalDto.Country,
+-            Status = festivalDto.Status,
+-            StartDate = festivalDto.StartDate,
+-            EndDate = festivalDto.EndDate
+-        };
++            await _service.CreateAsync(new FestivalCreateDto
++            {
++                Title = festivalDto.Title,
++                Description = festivalDto.Description,
++                Location = festivalDto.Location,
++                City = festivalDto.City,
++                Country = festivalDto.Country,
++                Status = festivalDto.Status,
++                StartDate = festivalDto.StartDate,
++                EndDate = festivalDto.EndDate,
++                PictureUrl = festivalDto.ExistingPictureUrl
++            });
++        }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(festivalDto);
++        }
+ 
+-
+-        _context.Festivals.Add(festival);
+-        await _context.SaveChangesAsync();
+-        
+         return RedirectToAction(nameof(Index));
+     }
+ 
+     [HttpGet("Edit/{id:guid}")]
+     public async Task<IActionResult> Edit(Guid id)
+     {
+-        var festival = await _context.Festivals.FindAsync(id);
++        var festival = await _service.GetByIdAsync(id);
+ 
+         if (festival == null)
+         {
+@@ -89,33 +107,37 @@
+     [HttpPost("Edit/{id:guid}")]
+     public async Task<IActionResult> Edit(Guid id, FestivalDto festivalDto)
+     {
+-        if (id != festivalDto.Id)
+-        {
+-            return NotFound();
+-        }
+-
+         if (!ModelState.IsValid)
+         {
+             return View(festivalDto);
+         }
+ 
+-        var festival = await _context.Festivals.FindAsync(id);
++        try
++        {
++            var updated = await _service.UpdateAsync(id, new FestivalUpdateDto
++            {
++                Title = festivalDto.Title,
++                Description = festivalDto.Description,
++                Location = festivalDto.Location,
++                City = festivalDto.City,
++                Country = festivalDto.Country,
++                Status = festivalDto.Status,
++                StartDate = festivalDto.StartDate,
++                EndDate = festivalDto.EndDate,
++                PictureUrl = festivalDto.ExistingPictureUrl
++            });
+ 
+-        if (festival == null)
+-        {
+-            return NotFound();
++            if (updated is null)
++            {
++                return NotFound();
++            }
+         }
++        catch (BusinessRuleException exception)
++        {
++            ModelState.AddModelError(string.Empty, exception.Message);
++            return View(festivalDto);
++        }
+ 
+-        festival.Title = festivalDto.Title;
+-        festival.Description = festivalDto.Description;
+-        festival.Location = festivalDto.Location;
+-        festival.City = festivalDto.City;
+-        festival.Country = festivalDto.Country;
+-        festival.Status = festivalDto.Status;
+-        festival.StartDate = festivalDto.StartDate;
+-        festival.EndDate = festivalDto.EndDate;
+-
+-        await _context.SaveChangesAsync();
+         return RedirectToAction(nameof(Index));
+     }
+ 
+@@ -123,14 +145,7 @@
+     [ValidateAntiForgeryToken]
+     public async Task<IActionResult> Delete(Guid id)
+     {
+-        var festival = await _context.Festivals.FindAsync(id);
+-        if (festival != null)
+-        {
+-            _context.Festivals.Remove(festival);
+-            await _context.SaveChangesAsync();
+-        }
++        await _service.DeleteAsync(id);
+         return RedirectToAction(nameof(Index));
+     }
+-
+-    private bool FestivalExists(Guid id) => _context.Festivals.Any(e => e.Id == id);
+ }
+diff --git a/Views/Users/Create.cshtml b/Views/Users/Create.cshtml
+new file mode 100644
+diff --git a/Views/Users/Edit.cshtml b/Views/Users/Edit.cshtml
+new file mode 100644

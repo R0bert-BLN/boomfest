@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowTime</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: { extend: { colors: { brand: '#e11d48', 'brand-hover': '#be123c', dark: '#0f172a' } } }
+        }
+    </script>
+</head>
+
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+<nav class="bg-dark text-white shadow-sm sticky top-0 z-10">
+    <div class="container mx-auto px-6 h-14 flex items-center justify-between">
+        <a href="index.html" class="flex items-center gap-2 text-lg font-bold tracking-wide hover:text-brand transition-colors">
+            <svg class="w-6 h-6 text-brand" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z" /></svg>
+            ShowTime
+        </a>
+
+        <div class="flex items-center gap-4 text-sm">
+            <a href="cart.html" class="relative text-slate-300 hover:text-white transition-colors mr-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span class="absolute -top-1.5 -right-2 bg-brand text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">2</span>
+            </a>
+
+            <a href="#" class="font-medium text-slate-300 hover:text-white transition-colors">Log in</a>
+            <a href="#" class="bg-brand hover:bg-brand-hover text-white px-4 py-1.5 rounded-md font-medium transition-colors">Sign Up</a>
+        </div>
+    </div>
+</nav>
+
+<header class="relative bg-dark pt-12 pb-28 flex items-center justify-center text-center">
+    <div class="absolute inset-0">
+        <div class="absolute inset-0 bg-gradient-to-t from-dark to-transparent"></div>
+    </div>
+
+    <div class="relative container mx-auto px-6 flex flex-col items-center">
+        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+            Find your <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand to-rose-400">rhythm.</span>
+        </h1>
+        <p class="text-base text-slate-300 mb-8 max-w-xl">Buy official tickets securely and quickly for the biggest festivals and concerts in Romania.</p>
+
+        <div class="bg-white p-1.5 rounded-lg flex w-full max-w-2xl shadow-xl">
+            <div class="flex-1 flex items-center px-3 border-r border-slate-200">
+                <svg class="w-4 h-4 text-slate-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" placeholder="Search for festival, artist, city..." class="w-full text-sm focus:outline-none text-slate-800 placeholder-slate-400">
+            </div>
+
+            <button class="bg-brand hover:bg-brand-hover text-white px-6 py-2 rounded-md text-sm font-bold transition-colors">Search</button>
+        </div>
+    </div>
+</header>
+
+<main class="flex-1 container mx-auto px-6 py-12 w-[1200px]">
+    <div class="flex justify-between items-end mb-8">
+        <div>
+            <h2 class="text-2xl font-bold text-slate-900">Recommended Events</h2>
+            <p class="text-sm text-slate-500 mt-1">The most popular festivals of the summer.</p>
+        </div>
+
+        <a href="events.html" class="flex items-center text-brand text-sm font-semibold hover:text-brand-hover transition-colors">
+            View all <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+        </a>
+    </div>
+
+    <div class="grid grid-cols-3 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-all flex flex-col">
+            <div class="relative h-40 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Event">
+                <div class="absolute top-2 left-2 bg-white text-slate-900 text-[10px] font-bold px-2 py-1 rounded shadow-sm"><span class="text-brand">15</span> Aug</div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col">
+                <h3 class="text-base font-bold text-slate-900 mb-1 group-hover:text-brand transition-colors">Electric Nights</h3>
+                <p class="text-xs text-slate-500 mb-3 flex items-center"><svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>Cluj Arena</p>
+
+                <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-sm font-bold text-slate-900">250 RON</span>
+                    <a href="#" class="bg-brand hover:bg-brand-hover text-white px-3.5 py-1 rounded-md text-[13px] font-bold transition-colors shadow-sm">Buy</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-all flex flex-col">
+            <div class="relative h-40 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1531058020387-3be344556be6?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Event">
+                <div class="absolute top-2 left-2 bg-white text-slate-900 text-[10px] font-bold px-2 py-1 rounded shadow-sm"><span class="text-brand">22</span> Jul</div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col">
+                <h3 class="text-base font-bold text-slate-900 mb-1 group-hover:text-brand transition-colors">Urban Art Expo</h3>
+                <p class="text-xs text-slate-500 mb-3 flex items-center"><svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>Brasov</p>
+
+                <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-sm font-bold text-slate-900">80 RON</span>
+                    <a href="#" class="bg-brand hover:bg-brand-hover text-white px-3.5 py-1 rounded-md text-[13px] font-bold transition-colors shadow-sm">Buy</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-md transition-all flex flex-col">
+            <div class="relative h-40 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=600&auto=format&fit=crop" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" alt="Event">
+                <div class="absolute top-2 left-2 bg-white text-slate-900 text-[10px] font-bold px-2 py-1 rounded shadow-sm"><span class="text-brand">10</span> Nov</div>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col">
+                <h3 class="text-base font-bold text-slate-900 mb-1 group-hover:text-brand transition-colors">Comedy Night</h3>
+                <p class="text-xs text-slate-500 mb-3 flex items-center"><svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>Sala Palatului</p>
+
+                <div class="mt-auto pt-3 border-t border-slate-100 flex items-center justify-between">
+                    <span class="text-sm font-bold text-slate-900">120 RON</span>
+                    <a href="#" class="bg-brand hover:bg-brand-hover text-white px-3.5 py-1 rounded-md text-[13px] font-bold transition-colors shadow-sm">Buy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="bg-dark text-slate-400 py-8 border-t border-slate-800">
+    <div class="container mx-auto px-6 text-center text-sm">
+        <p>&copy; 2025 ShowTime. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,61 @@
+@model User
+@{
+    ViewData["Title"] = "User Details";
+    Layout = "_AdminLayout";
+
+    var roleClass = Model.Role switch
+    {
+        BoomFest.Enums.UserRole.Admin => "bg-slate-100 text-slate-700",
+        BoomFest.Enums.UserRole.Staff => "bg-violet-100 text-violet-700",
+        _ => "bg-blue-100 text-blue-700"
+    };
+}
+
+<div class="max-w-4xl mx-auto pb-8">
+    <div class="flex items-center justify-between mb-8">
+        <div class="flex items-center gap-4">
+            <a asp-action="Index" class="group flex items-center justify-center w-8 h-8 rounded-full border border-slate-200 bg-white hover:border-brand transition-all shadow-sm">
+                <svg class="w-4 h-4 text-slate-500 group-hover:text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+            </a>
+            <h2 class="text-lg font-bold text-slate-800">View User</h2>
+        </div>
+
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="px-4 py-2 rounded-lg bg-brand text-white text-sm font-medium hover:bg-brand-hover transition-colors">
+            Edit User
+        </a>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        <div class="p-8">
+            <div class="flex items-center gap-4 pb-6 border-b border-slate-100">
+                <div class="w-14 h-14 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-lg">
+                    @string.Concat(Model.FirstName.FirstOrDefault(), Model.LastName.FirstOrDefault()).ToUpperInvariant()
+                </div>
+                <div>
+                    <p class="text-xl font-bold text-slate-800">@Model.FirstName @Model.LastName</p>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold @roleClass">@Model.Role</span>
+                </div>
+            </div>
+
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 mt-6">
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Email</dt>
+                    <dd class="text-sm font-medium text-slate-700">@Model.Email</dd>
+                </div>
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Registration Date</dt>
+                    <dd class="text-sm font-medium text-slate-700">@Model.CreatedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")</dd>
+                </div>
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Last Update</dt>
+                    <dd class="text-sm font-medium text-slate-700">@Model.UpdatedAt.ToLocalTime().ToString("dd MMM yyyy HH:mm")</dd>
+                </div>
+                <div>
+                    <dt class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Verified At</dt>
+                    <dd class="text-sm font-medium text-slate-700">@(Model.VerifiedAt?.ToLocalTime().ToString("dd MMM yyyy HH:mm") ?? "Not verified")</dd>
+                </div>
+            </dl>
+        </div>
+    </div>
+</div>
+
