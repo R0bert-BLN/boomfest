@@ -1,4 +1,6 @@
 using BoomFest.Data;
+using BoomFest.Repositories;
+using BoomFest.Services;
 using Microsoft.EntityFrameworkCore;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -12,13 +14,19 @@ builder.Services.AddDbContextPool<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
+builder.Services.AddScoped<IFestivalRepository, FestivalRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+
+builder.Services.AddScoped<IFestivalService, FestivalService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = builder.Configuration.GetConnectionString("Redis");
     options.Configuration = "boomfest_";
 });
-
-builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 

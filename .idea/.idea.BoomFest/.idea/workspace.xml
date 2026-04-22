@@ -10,15 +10,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9a7742b-5335-4e7b-af85-16c6d5befe0a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Controllers/TransactionsController.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dtos/FestivalDetailsDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Views/Transactions/Index.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dtos/TransactionsIndexDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Repositories/FestivalRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Repositories/IFestivalRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Repositories/ITransactionRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Repositories/IUserRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Repositories/TransactionRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Repositories/UserRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/FestivalService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/IFestivalService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/ITransactionService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/IUserService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/TransactionService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/UserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.BoomFest/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BoomFest/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/FestivalsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/FestivalsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Festivals/Edit.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Festivals/Edit.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Festivals/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Festivals/Index.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Festivals/Partials/_FestivalRow.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Festivals/Partials/_FestivalRow.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Views/Shared/_AdminSidebar.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Shared/_AdminSidebar.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/TransactionsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/TransactionsController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/UsersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/Transactions/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Transactions/Index.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wwwroot/css/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/wwwroot/css/output.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -58,6 +68,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="SET_USER_NAME_GLOBALLY" value="false" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -182,8 +193,18 @@
       <workItem from="1776707844545" duration="7112000" />
       <workItem from="1776790314322" duration="1031000" />
       <workItem from="1776792593252" duration="3114000" />
-      <workItem from="1776796842535" duration="1997000" />
+      <workItem from="1776796842535" duration="2820000" />
+      <workItem from="1776869132357" duration="1252000" />
     </task>
+    <task id="LOCAL-00001" summary="implement stuff">
+      <option name="closed" value="true" />
+      <created>1776799572532</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776799572532</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -193,6 +214,8 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="implement stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="implement stuff" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

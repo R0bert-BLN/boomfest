@@ -1,3 +1,5 @@
+using BoomFest.Dtos;
+using BoomFest.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoomFest.Controllers;
@@ -5,10 +7,21 @@ namespace BoomFest.Controllers;
 [Route("Admin/[controller]")]
 public class TransactionsController : Controller
 {
-    [HttpGet]
-    public IActionResult Index()
+    private readonly ITransactionService _transactionService;
+
+    public TransactionsController(ITransactionService transactionService)
     {
-        return View();
+        _transactionService = transactionService;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Index()
+    {
+        var model = new TransactionsIndexDto
+        {
+            TotalOrders = await _transactionService.GetTotalOrdersAsync()
+        };
+
+        return View(model);
     }
 }
-

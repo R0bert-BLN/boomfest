@@ -1,40 +1,24 @@
-using BoomFest.Data;
 using BoomFest.Dtos;
-using BoomFest.Models;
+using BoomFest.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BoomFest.Controllers;
 
 [Route("Admin/[controller]")]
 public class UsersController : Controller
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IUserService _userService;
 
-    public UsersController(ApplicationDbContext context)
+    public UsersController(IUserService userService)
     {
-        _context = context;
+        _userService = userService;
     }
 
     [HttpGet]
     public async Task<IActionResult> Index(string? q)
     {
-        var usersQuery = _context.Users.AsNoTracking().AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(q))
-        {
-            var search = q.Trim();
-            usersQuery = usersQuery.Where(user =>
-                user.FirstName.Contains(search) ||
-                user.LastName.Contains(search) ||
-                user.Email.Contains(search));
-        }
-
-        var users = await usersQuery
-            .OrderByDescending(user => user.CreatedAt)
-            .ToListAsync();
-
-        ViewData["SearchQuery"] = q;
+        var (users, searchQuery) = await _userService.GetIndexDataAsync(q);
+        ViewData["SearchQuery"] = searchQuery;
         return View(users);
     }
 
@@ -48,32 +32,21 @@ public class UsersController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(UserDto userDto)
     {
-        if (string.IsNullOrWhiteSpace(userDto.Password))
-        {
-            ModelState.AddModelError(nameof(UserDto.Password), "Password is required");
-        }
-
-        if (await _context.Users.AnyAsync(user => user.Email == userDto.Email))
-        {
-            ModelState.AddModelError(nameof(UserDto.Email), "Email is already in use");
-        }
-
         if (!ModelState.IsValid)
         {
             return View(userDto);
         }
 
-        var user = new User
+        var result = await _userService.CreateAsync(userDto);
+        foreach (var validationError in result.ValidationErrors)
         {
-            FirstName = userDto.FirstName.Trim(),
-            LastName = userDto.LastName.Trim(),
-            Email = userDto.Email.Trim(),
-            Password = userDto.Password!,
-            Role = userDto.Role
-        };
+            ModelState.AddModelError(validationError.Key, validationError.Value);
+        }
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        if (!result.IsSuccess)
+        {
+            return View(userDto);
+        }
 
         return RedirectToAction(nameof(Index));
     }
@@ -81,20 +54,11 @@ public class UsersController : Controller
     [HttpGet("Edit/{id:guid}")]
     public async Task<IActionResult> Edit(Guid id)
     {
-        var user = await _context.Users.FindAsync(id);
-        if (user == null)
+        var userDto = await _userService.GetEditDtoAsync(id);
+        if (userDto == null)
         {
             return NotFound();
         }
-
-        var userDto = new UserDto
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email,
-            Role = user.Role
-        };
 
         return View(userDto);
     }
@@ -108,33 +72,26 @@ public class UsersController : Controller
             return NotFound();
         }
 
-        var user = await _context.Users.FindAsync(id);
-        if (user == null)
-        {
-            return NotFound();
-        }
-
-        if (await _context.Users.AnyAsync(existingUser => existingUser.Id != id && existingUser.Email == userDto.Email))
-        {
-            ModelState.AddModelError(nameof(UserDto.Email), "Email is already in use");
-        }
-
         if (!ModelState.IsValid)
         {
             return View(userDto);
         }
 
-        user.FirstName = userDto.FirstName.Trim();
-        user.LastName = userDto.LastName.Trim();
-        user.Email = userDto.Email.Trim();
-        user.Role = userDto.Role;
-
-        if (!string.IsNullOrWhiteSpace(userDto.Password))
+        var result = await _userService.EditAsync(id, userDto);
+        if (result.IsNotFound)
         {
-            user.Password = userDto.Password;
+            return NotFound();
         }
 
-        await _context.SaveChangesAsync();
+        foreach (var validationError in result.ValidationErrors)
+        {
+            ModelState.AddModelError(validationError.Key, validationError.Value);
+        }
+
+        if (!result.IsSuccess)
+        {
+            return View(userDto);
+        }
 
         return RedirectToAction(nameof(Index));
     }
@@ -149,13 +106,7 @@ public class UsersController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var user = await _context.Users.FindAsync(id);
-        if (user != null)
-        {
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-        }
-
+        await _userService.DeleteAsync(id);
         return RedirectToAction(nameof(Index));
     }
 }
