@@ -60,5 +60,10 @@ public class UserRepository : IUserRepository
     {
         return _context.SaveChangesAsync();
     }
-}
 
+    public Task<User?> FindByEmailAsync(string email)
+    {
+        var normalized = email.Trim().ToLower();
+        return _context.Users.FirstOrDefaultAsync(user => user.Email.ToLower() == normalized);
+    }
+}

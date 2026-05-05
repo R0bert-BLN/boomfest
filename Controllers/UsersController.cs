@@ -1,9 +1,11 @@
 using BoomFest.Dtos;
 using BoomFest.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BoomFest.Controllers;
 
+[Authorize(Roles = "Admin,Staff")]
 [Route("Admin/[controller]")]
 public class UsersController : Controller
 {
@@ -110,4 +112,3 @@ public class UsersController : Controller
         return RedirectToAction(nameof(Index));
     }
 }
-

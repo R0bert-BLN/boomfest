@@ -1,10 +1,50 @@
+@model BoomFest.Dtos.DashboardStatsDto
 @{
     ViewData["Title"] = "Dashboard Overview";
 }
 
-<div class="flex items-center justify-center h-64 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50">
-    <div class="text-center text-slate-400">
-        <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-        <p class="text-sm font-bold uppercase tracking-widest">Dashboard Content Will Be Here</p>
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Festivals</p>
+        <div class="mt-3 flex items-center justify-between">
+            <span class="text-2xl font-black text-slate-900">@Model.TotalFestivals</span>
+            <div class="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Published: <span class="font-semibold text-slate-700">@Model.PublishedFestivals</span></p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Upcoming Festivals</p>
+        <div class="mt-3 flex items-center justify-between">
+            <span class="text-2xl font-black text-slate-900">@Model.UpcomingFestivals</span>
+            <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            </div>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Starting after today</p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Users</p>
+        <div class="mt-3 flex items-center justify-between">
+            <span class="text-2xl font-black text-slate-900">@Model.TotalUsers</span>
+            <div class="w-10 h-10 rounded-full bg-violet-50 text-violet-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-5-3.87M17 20H7m10 0v-2c0-.65-.12-1.27-.34-1.85M7 20H2v-2a4 4 0 015-3.87M7 20v-2c0-.65.12-1.27.34-1.85m0 0a5 5 0 019.32 0M16 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+            </div>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Registered accounts</p>
+    </div>
+
+    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-5">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Orders</p>
+        <div class="mt-3 flex items-center justify-between">
+            <span class="text-2xl font-black text-slate-900">@Model.TotalOrders</span>
+            <div class="w-10 h-10 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+            </div>
+        </div>
+        <p class="text-xs text-slate-500 mt-2">Total purchases</p>
     </div>
 </div>

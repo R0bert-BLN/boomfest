@@ -1,0 +1,85 @@
+@using System.Globalization
+@model BoomFest.Dtos.EventsIndexDto
+
+<header class="bg-white border-b border-slate-200 pt-6 pb-6 shadow-sm">
+    <div class="container mx-auto px-6 max-w-5xl">
+        <form method="get" class="flex flex-row gap-3 items-center">
+            <div class="relative w-full">
+                <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                <input type="text" name="q" value="@Model.SearchQuery" placeholder="Name or location..." class="w-full pl-9 pr-3 py-2 bg-white border border-slate-300 rounded-md text-[13px] focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand shadow-sm transition-all">
+            </div>
+
+            <button class="w-auto px-8 py-2 bg-brand hover:bg-brand-hover text-white font-bold rounded-md text-[13px] transition-colors shadow-sm whitespace-nowrap">
+                Search
+            </button>
+        </form>
+    </div>
+</header>
+
+<main class="flex-1 container mx-auto px-6 py-8 max-w-5xl">
+
+    <div class="space-y-4">
+        @if (Model.Events.Count == 0)
+        {
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 text-center text-sm text-slate-500">No events found.</div>
+        }
+        else
+        {
+            @foreach (var festival in Model.Events)
+            {
+                var day = festival.StartDate.ToString("dd", CultureInfo.InvariantCulture);
+                var month = festival.StartDate.ToString("MMM", CultureInfo.InvariantCulture);
+                var fallbackImage = "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=600&q=80";
+                var priceText = festival.MinPrice.HasValue
+                    ? $"{festival.MinPrice.Value:0}"
+                    : "TBA";
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-row group hover:shadow-md transition-all h-45">
+                    <div class="w-[240px] relative overflow-hidden">
+                        <img src="@(festival.PictureUrl ?? fallbackImage)" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" alt="@festival.Title">
+
+                        <div class="absolute top-3 left-3 bg-white/95 text-slate-900 text-center rounded shadow-sm overflow-hidden flex flex-col">
+                            <span class="bg-brand text-white text-[9px] font-bold uppercase tracking-wider px-2.5 py-0.5">@month</span>
+                            <span class="text-sm font-black px-2.5 py-0.5">@day</span>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start mb-1.5">
+                                <h2 class="text-lg font-bold text-slate-900 group-hover:text-brand transition-colors">@festival.Title</h2>
+                                <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded border border-slate-200 uppercase tracking-wider">Festival</span>
+                            </div>
+
+                            <div class="flex flex-wrap gap-3 text-[12px] text-slate-500 mb-2">
+                                <span class="flex items-center gap-1">
+                                    <svg class="w-3.5 h-3.5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+                                    @festival.Location
+                                </span>
+                            </div>
+
+                            <p class="text-[13px] text-slate-600 line-clamp-2">Discover the full experience and lineup on the event page.</p>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                            <div>
+                                <span class="text-[11px] text-slate-400 font-medium uppercase tracking-wider block leading-none mb-1">Tickets from</span>
+                                <span class="text-lg font-black text-slate-900 leading-none">@priceText <span class="text-xs font-bold text-slate-500">RON</span></span>
+                            </div>
+
+                            @if (festival.IsSoldOut)
+                            {
+                                <button class="bg-slate-200 text-slate-500 px-5 py-2 rounded-md text-[13px] font-bold cursor-not-allowed border border-slate-300">Unavailable</button>
+                            }
+                            else
+                            {
+                                <a asp-controller="Events" asp-action="Details" asp-route-id="@festival.Id" class="bg-brand hover:bg-brand-hover text-white px-5 py-2 rounded-md text-[13px] font-bold transition-colors shadow-sm">Buy</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</main>
+

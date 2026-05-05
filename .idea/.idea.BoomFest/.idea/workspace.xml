@@ -10,25 +10,54 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f9a7742b-5335-4e7b-af85-16c6d5befe0a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Dtos/TransactionsIndexDto.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/FestivalRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/IFestivalRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/ITransactionRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/IUserRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/TransactionRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Repositories/UserRepository.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/FestivalService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/IFestivalService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/ITransactionService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/IUserService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/TransactionService.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Services/UserService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controllers/AccountController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controllers/CartController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controllers/EventsController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Controllers/HomeController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dtos/CartDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dtos/CartRequestDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dtos/DashboardStatsDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dtos/EventsDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dtos/LandingPageDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dtos/LoginDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dtos/RegisterDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/AuthService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/CartService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/EventsService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/IAuthService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/ICartService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Services/IEventsService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Account/Login.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Account/Register.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Account/_ViewStart.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Cart/Index.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Cart/_ViewStart.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Events/Details.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Events/Index.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Events/_ViewStart.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Home/Index.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Home/_ViewStart.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Shared/_CheckoutLayout.cshtml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Views/Shared/_PublicLayout.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.BoomFest/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.BoomFest/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Controllers/AdminController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/AdminController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/FestivalsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/FestivalsController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/TransactionsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/TransactionsController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Controllers/UsersController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/FestivalRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/FestivalRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/IFestivalRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/IFestivalRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/IUserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/IUserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Repositories/UserRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Repositories/UserRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/FestivalService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/FestivalService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/IFestivalService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/IFestivalService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Services/UserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/Admin/Dashboard.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Admin/Dashboard.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/Mocks/landing-page.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/Shared/_AdminLayout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Shared/_AdminLayout.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Views/Shared/_AdminSidebar.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Shared/_AdminSidebar.cshtml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Views/Transactions/Index.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Views/Transactions/Index.cshtml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wwwroot/css/input.css" beforeDir="false" afterPath="$PROJECT_DIR$/wwwroot/css/input.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/wwwroot/css/output.css" beforeDir="false" afterPath="$PROJECT_DIR$/wwwroot/css/output.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,8 +81,8 @@
   </component>
   <component name="CopilotUserSelectedModel">
     <selectedModels>
-      <entry key="agent-panel" value="GPT-5.3-Codex" />
-      <entry key="chat-panel" value="GPT-5.3-Codex" />
+      <entry key="agent-panel" value="GPT-5.2-Codex" />
+      <entry key="chat-panel" value="GPT-5.2-Codex" />
     </selectedModels>
   </component>
   <component name="DpaMonitoringSettings">
@@ -83,7 +112,7 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/rober/RiderProjects/boomfest/Controllers/FestivalsController.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ce77f9169ee8e4a6eab1249fbfe9105be469b048a94af678a2d19b69a5/Future.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
@@ -100,6 +129,9 @@
   &quot;associatedIndex&quot;: 4
 }</component>
   <component name="ProjectId" id="3Bj0YJvoTWdYbVahQ2w6aLxp8ZW" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -194,7 +226,8 @@
       <workItem from="1776790314322" duration="1031000" />
       <workItem from="1776792593252" duration="3114000" />
       <workItem from="1776796842535" duration="2820000" />
-      <workItem from="1776869132357" duration="1252000" />
+      <workItem from="1776869132357" duration="3343000" />
+      <workItem from="1777995124296" duration="5700000" />
     </task>
     <task id="LOCAL-00001" summary="implement stuff">
       <option name="closed" value="true" />
@@ -204,7 +237,15 @@
       <option name="project" value="LOCAL" />
       <updated>1776799572532</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="implement stuff">
+      <option name="closed" value="true" />
+      <created>1776871867826</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1776871867826</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

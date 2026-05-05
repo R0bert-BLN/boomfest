@@ -1,0 +1,113 @@
+@using System.Globalization
+@model BoomFest.Dtos.CartDto
+
+<main class="flex-1 container mx-auto px-4 py-8 max-w-5xl flex flex-row gap-8 items-start">
+    <div class="flex-1 w-full">
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+            <h2 class="text-lg font-bold text-slate-900 mb-5 pb-2 border-b border-slate-100">1. Contact Details</h2>
+
+            <form class="space-y-6">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">First Name</label>
+                        <input type="text" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors" placeholder="John" required>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Last Name</label>
+                        <input type="text" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors" placeholder="Doe" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Email Address</label>
+                    <input type="email" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors" placeholder="john.doe@email.com" required>
+                </div>
+
+                <div class="pt-6 mt-6">
+                    <h2 class="text-lg font-bold text-slate-900 mb-5 pb-2 border-b border-slate-100">2. Credit Card Details</h2>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Card Number</label>
+                            <div class="relative">
+                                <input type="text" class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors placeholder-slate-400" placeholder="0000 0000 0000 0000">
+                                <svg class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 transform -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Expiration</label>
+                                <input type="text" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors placeholder-slate-400" placeholder="MM / YY">
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">CVC / CVV</label>
+                                <div class="relative">
+                                    <input type="text" class="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-sm font-mono focus:outline-none focus:border-brand focus:ring-1 focus:ring-brand transition-colors placeholder-slate-400" placeholder="123">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="w-80">
+        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden relative">
+            <div class="p-6">
+                <h3 class="text-sm font-bold text-slate-900 mb-4 border-b border-slate-100 pb-3 flex justify-between items-center">
+                    Your Cart
+                    <span class="bg-slate-100 text-slate-600 px-2 py-0.5 rounded text-xs">@Model.TotalTickets Tickets</span>
+                </h3>
+
+                @if (Model.Festivals.Count == 0)
+                {
+                    <p class="text-sm text-slate-500">Your cart is empty.</p>
+                }
+                else
+                {
+                    @foreach (var festival in Model.Festivals)
+                    {
+                        <div class="mb-6">
+                            <div class="flex justify-between items-start mb-1">
+                                <p class="font-bold text-slate-900 leading-tight text-sm">@festival.Title</p>
+                                <p class="font-bold text-slate-900 text-sm">@festival.Subtotal.ToString("0", CultureInfo.InvariantCulture) RON</p>
+                            </div>
+
+                            <p class="text-[11px] text-slate-500 mb-2">@festival.StartDate.ToString("dd MMM yyyy", CultureInfo.InvariantCulture) &bull; @festival.Location</p>
+
+                            @foreach (var item in festival.Items)
+                            {
+                                <div class="flex items-center text-xs text-slate-600 bg-slate-50 p-2 rounded border border-slate-100 mb-2">
+                                    <span class="font-bold mr-1">@item.Quantity x</span> @item.CategoryName
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+
+                <div class="h-16"></div>
+
+                <div class="flex justify-between items-center border-t border-slate-200 pt-3 mb-6">
+                    <span class="text-sm font-bold text-slate-800">Total to Pay</span>
+
+                    <div class="text-right">
+                        <span class="text-md font-black text-slate-900 tracking-tight">@Model.TotalPrice.ToString("0", CultureInfo.InvariantCulture)</span>
+                        <span class="text-sm font-bold text-slate-500">RON</span>
+                    </div>
+                </div>
+
+                <button class="w-full bg-brand hover:bg-brand-hover text-white py-2.5 rounded-xl text-sm font-bold transition-all shadow-md flex justify-center items-center gap-2 group" @(Model.TotalTickets == 0 ? "disabled" : string.Empty)>
+                    Confirm & Pay
+                    <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                </button>
+
+                <p class="text-center text-[10px] text-slate-400 mt-3 px-2 pb-2 pt-1">By confirming the payment you agree to our <a href="#" class="underline">Terms and Conditions</a>.</p>
+            </div>
+        </div>
+    </div>
+</main>
+

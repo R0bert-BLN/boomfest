@@ -6,6 +6,7 @@ namespace BoomFest.Services;
 public interface IFestivalService
 {
     Task<(IReadOnlyList<Festival> Festivals, string SearchQuery)> GetIndexDataAsync(string? query);
+    Task<LandingPageDto> GetLandingPageAsync();
     Task CreateAsync(FestivalDto festivalDto);
     Task<FestivalDetailsDto?> GetEditDtoAsync(Guid id);
     Task PopulateStatsAsync(FestivalDetailsDto festivalDto, Guid festivalId);
@@ -20,4 +21,3 @@ public class FestivalEditResult
     public string? ErrorMessage { get; init; }
     public Dictionary<string, string> ValidationErrors { get; init; } = new();
 }
-

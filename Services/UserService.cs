@@ -1,16 +1,19 @@
 using BoomFest.Dtos;
 using BoomFest.Models;
 using BoomFest.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace BoomFest.Services;
 
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher<User> _passwordHasher;
 
-    public UserService(IUserRepository userRepository)
+    public UserService(IUserRepository userRepository, IPasswordHasher<User> passwordHasher)
     {
         _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task<(IReadOnlyList<User> Users, string SearchQuery)> GetIndexDataAsync(string? query)
@@ -45,9 +48,11 @@ public class UserService : IUserService
             FirstName = userDto.FirstName.Trim(),
             LastName = userDto.LastName.Trim(),
             Email = email,
-            Password = userDto.Password!,
+            Password = string.Empty,
             Role = userDto.Role
         };
+
+        user.Password = _passwordHasher.HashPassword(user, userDto.Password!);
 
         _userRepository.Add(user);
         await _userRepository.SaveChangesAsync();
@@ -101,7 +106,7 @@ public class UserService : IUserService
 
         if (!string.IsNullOrWhiteSpace(userDto.Password))
         {
-            user.Password = userDto.Password;
+            user.Password = _passwordHasher.HashPassword(user, userDto.Password);
         }
 
         await _userRepository.SaveChangesAsync();
@@ -121,4 +126,3 @@ public class UserService : IUserService
         await _userRepository.SaveChangesAsync();
     }
 }
-

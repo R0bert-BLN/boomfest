@@ -1,0 +1,59 @@
+@using BoomFest.Services
+@inject ICartService CartService
+@{ var cart = await CartService.GetCartAsync(); var cartCount = cart.TotalTickets; }
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShowTime</title>
+    <link rel="stylesheet" href="~/css/output.css" asp-append-version="true" />
+    <script src="~/js/output.js" asp-append-version="true" defer></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+<nav class="bg-dark text-white shadow-sm sticky top-0 z-10">
+    <div class="container mx-auto px-6 h-14 flex items-center justify-between">
+        <a asp-controller="Home" asp-action="Index" class="flex items-center gap-2 text-lg font-bold tracking-wide hover:text-brand transition-colors">
+            <svg class="w-6 h-6 text-brand" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 100 4v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2a2 2 0 100-4V6z" />
+            </svg>
+            ShowTime
+        </a>
+
+        <div class="flex items-center gap-4 text-sm">
+            <a asp-controller="Cart" asp-action="Index" class="relative text-slate-300 hover:text-white transition-colors mr-2" aria-label="Cart">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                </svg>
+                <span class="absolute -top-1.5 -right-2 bg-brand text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">@cartCount</span>
+            </a>
+
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <form asp-controller="Account" asp-action="Logout" method="post" class="inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="bg-brand hover:bg-brand-hover text-white px-4 py-1.5 rounded-md font-medium transition-colors">Logout</button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="font-medium text-slate-300 hover:text-white transition-colors">Log in</a>
+                <a asp-controller="Account" asp-action="Register" class="bg-brand hover:bg-brand-hover text-white px-4 py-1.5 rounded-md font-medium transition-colors">Sign Up</a>
+            }
+        </div>
+    </div>
+</nav>
+
+@RenderBody()
+
+<footer class="bg-dark text-slate-400 py-8 border-t border-slate-800 mt-auto">
+    <div class="container mx-auto px-6 text-center text-sm">
+        <p>&copy; 2025 ShowTime. All rights reserved.</p>
+    </div>
+</footer>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+

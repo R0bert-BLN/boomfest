@@ -1,0 +1,156 @@
+@using System.Globalization
+@model BoomFest.Dtos.EventDetailsDto
+
+<main class="container mx-auto px-6 py-10 max-w-4xl">
+    <div class="mb-8">
+        <div class="flex items-center gap-2 text-brand font-bold text-[11px] uppercase tracking-widest mb-2">
+            <span class="bg-brand/10 px-2 py-0.5 rounded">Music Festival</span>
+            <span>• @Model.StartDate.ToString("dd MMM", CultureInfo.InvariantCulture) - @Model.EndDate.ToString("dd MMM yyyy", CultureInfo.InvariantCulture)</span>
+        </div>
+        <h1 class="text-4xl font-black text-slate-900 tracking-tight mb-2">@Model.Title</h1>
+        <p class="text-slate-500 font-medium flex items-center gap-1.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path></svg>
+            @Model.Location
+        </p>
+    </div>
+
+    <div class="relative rounded-2xl overflow-hidden shadow-lg mb-12">
+        <img src="@(Model.PictureUrl ?? "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?auto=format&fit=crop&w=1200&q=80")" class="w-full h-[400px] object-cover" alt="@Model.Title poster">
+    </div>
+
+    <section class="mb-16">
+        <h2 class="text-xl font-bold text-slate-900 mb-4 border-b border-slate-200 pb-2">About the Event</h2>
+        <p class="text-slate-600 leading-relaxed text-base">@Model.Description</p>
+    </section>
+
+    <section class="mb-16">
+        <h2 class="text-xl font-bold text-slate-900 mb-6 border-b border-slate-200 pb-2">Line-up</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            @if (Model.Lineups.Count == 0)
+            {
+                <div class="col-span-2 bg-white border border-slate-200 rounded-xl p-4 text-sm text-slate-500">Line-up will be announced soon.</div>
+            }
+            else
+            {
+                @foreach (var artist in Model.Lineups)
+                {
+                    <div class="flex items-center gap-4 bg-white p-3 rounded-xl border border-slate-200 shadow-sm group hover:border-brand transition-colors">
+                        <img src="@(artist.ArtistImageUrl ?? "https://images.unsplash.com/photo-1598387993441-a364f854c3e1?w=200")" class="w-16 h-16 rounded-lg object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt="@artist.ArtistName">
+                        <div>
+                            <h4 class="font-bold text-slate-900">@artist.ArtistName</h4>
+                            <p class="text-[11px] text-slate-500">@(string.IsNullOrWhiteSpace(artist.Description) ? "Special guest artist." : artist.Description)</p>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </section>
+
+    <form asp-controller="Cart" asp-action="Add" method="post" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="FestivalId" value="@Model.Id" />
+
+        <div class="bg-dark p-6 text-white">
+            <h2 class="text-xl font-bold">Select Tickets</h2>
+            <p class="text-slate-400 text-xs mt-1">Reserve your spot at @Model.Title</p>
+        </div>
+
+        <div class="p-6 space-y-6" id="ticket-tier-container">
+            @if (Model.TicketTiers.Count == 0)
+            {
+                <div class="text-sm text-slate-500">Tickets are not on sale yet.</div>
+            }
+            else
+            {
+                @for (var i = 0; i < Model.TicketTiers.Count; i++)
+                {
+                    var tier = Model.TicketTiers[i];
+                    var isSoldOut = tier.Remaining <= 0;
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-100 last:border-0 last:pb-0" data-tier-row>
+                        <div class="max-w-sm">
+                            <h4 class="font-bold text-slate-900">@tier.Name</h4>
+                            <p class="text-xs text-slate-500 mt-1">@(string.IsNullOrWhiteSpace(tier.Description) ? "Ticket tier details." : tier.Description)</p>
+                            <p class="text-[11px] text-slate-400 mt-1">@tier.Remaining available</p>
+                        </div>
+                        <div class="flex items-center justify-between md:justify-end gap-8">
+                            <span class="text-lg font-black text-slate-900">@tier.Price.ToString("0") RON</span>
+                            <div class="flex items-center gap-3 bg-slate-100 p-1 rounded-lg border border-slate-200">
+                                <button type="button" class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-slate-400 hover:text-brand font-bold transition-colors" data-qty-minus @(isSoldOut ? "disabled" : string.Empty)>-</button>
+                                <span class="w-6 text-center font-bold text-sm" data-qty-value>0</span>
+                                <button type="button" class="w-7 h-7 flex items-center justify-center bg-white rounded shadow-sm text-slate-800 hover:text-brand font-bold transition-colors" data-qty-plus @(isSoldOut ? "disabled" : string.Empty)>+</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Quantities.Index" value="@i" />
+                        <input type="hidden" name="Quantities[@i].CategoryId" value="@tier.CategoryId" />
+                        <input type="hidden" name="Quantities[@i].Quantity" value="0" data-qty-input />
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="bg-slate-50 p-6 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Selected Subtotal</p>
+                <span class="text-2xl font-black text-slate-900 tracking-tight" id="ticket-subtotal">0.00 <span class="text-xs font-bold text-slate-500 uppercase">RON</span></span>
+            </div>
+            <button type="submit" class="w-full md:w-auto bg-brand hover:bg-brand-hover text-white px-10 py-3 rounded-xl font-bold shadow-lg shadow-brand/30 transition-all transform active:scale-95 flex items-center justify-center gap-2 group" @(Model.IsSoldOut ? "disabled" : string.Empty)>
+                Add to Cart
+                <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+        </div>
+    </form>
+</main>
+
+@section Scripts {
+    <script>
+        (function () {
+            var rows = document.querySelectorAll("[data-tier-row]");
+            var subtotalNode = document.getElementById("ticket-subtotal");
+
+            function formatAmount(value) {
+                return value.toFixed(2) + " RON";
+            }
+
+            function updateSubtotal() {
+                var total = 0;
+                rows.forEach(function (row) {
+                    var priceText = row.querySelector(".text-lg")?.textContent || "0";
+                    var price = parseFloat(priceText.replace("RON", "")) || 0;
+                    var quantity = parseInt(row.querySelector("[data-qty-value]")?.textContent || "0", 10);
+                    total += price * quantity;
+                });
+
+                subtotalNode.textContent = formatAmount(total);
+            }
+
+            rows.forEach(function (row) {
+                var minus = row.querySelector("[data-qty-minus]");
+                var plus = row.querySelector("[data-qty-plus]");
+                var valueNode = row.querySelector("[data-qty-value]");
+                var input = row.querySelector("[data-qty-input]");
+
+                if (!minus || !plus || !valueNode || !input) {
+                    return;
+                }
+
+                minus.addEventListener("click", function () {
+                    var current = parseInt(valueNode.textContent || "0", 10);
+                    if (current > 0) {
+                        current -= 1;
+                        valueNode.textContent = current.toString();
+                        input.value = current.toString();
+                        updateSubtotal();
+                    }
+                });
+
+                plus.addEventListener("click", function () {
+                    var current = parseInt(valueNode.textContent || "0", 10);
+                    current += 1;
+                    valueNode.textContent = current.toString();
+                    input.value = current.toString();
+                    updateSubtotal();
+                });
+            });
+        })();
+    </script>
+}

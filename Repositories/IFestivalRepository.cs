@@ -6,7 +6,10 @@ namespace BoomFest.Repositories;
 public interface IFestivalRepository
 {
     Task<List<Festival>> GetFestivalsAsync(string? search);
+    Task<List<Festival>> GetFeaturedFestivalsAsync(int take);
+    Task<List<Festival>> GetPublishedFestivalsAsync(string? search);
     Task<Festival?> GetFestivalByIdWithDetailsAsync(Guid id);
+    Task<Festival?> GetFestivalDetailsAsync(Guid id);
     Task<Festival?> FindFestivalByIdAsync(Guid id);
     Task<int> SaveChangesAsync();
 
@@ -28,5 +31,8 @@ public interface IFestivalRepository
 
     Task<bool> ResolveConcurrencyConflictsAsync(DbUpdateConcurrencyException exception);
     Task<bool> RefreshOrDetachStaleEntriesAsync();
-}
 
+    Task<Dictionary<Guid, int>> GetSoldTicketsByFestivalIdsAsync(IEnumerable<Guid> festivalIds);
+    Task<Dictionary<Guid, int>> GetSoldTicketsByCategoryAsync(Guid festivalId);
+    Task<List<TicketCategory>> GetTicketCategoriesByIdsAsync(IEnumerable<Guid> categoryIds);
+}

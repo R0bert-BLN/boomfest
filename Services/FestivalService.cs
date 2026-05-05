@@ -181,6 +181,35 @@ public class FestivalService : IFestivalService
         await _festivalRepository.SaveChangesAsync();
     }
 
+    public async Task<LandingPageDto> GetLandingPageAsync()
+    {
+        var festivals = await _festivalRepository.GetFeaturedFestivalsAsync(3);
+        var cards = festivals
+            .Select(festival =>
+            {
+                var location = string.IsNullOrWhiteSpace(festival.Location)
+                    ? string.Join(", ", new[] { festival.City, festival.Country }.Where(value => !string.IsNullOrWhiteSpace(value)))
+                    : festival.Location;
+
+                var minPrice = festival.TicketCategories.Count > 0
+                    ? festival.TicketCategories.Min(t => t.Price)
+                    : (decimal?)null;
+
+                return new FestivalCardDto
+                {
+                    Id = festival.Id,
+                    Title = festival.Title,
+                    Location = location,
+                    StartDate = festival.StartDate,
+                    PictureUrl = festival.PictureUrl,
+                    MinPrice = minPrice
+                };
+            })
+            .ToList();
+
+        return new LandingPageDto { Festivals = cards };
+    }
+
     private static Dictionary<string, string> ValidateEditPayload(FestivalDetailsDto festivalDto)
     {
         var errors = new Dictionary<string, string>();

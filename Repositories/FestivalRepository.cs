@@ -35,6 +35,29 @@ public class FestivalRepository : IFestivalRepository
             .ToListAsync();
     }
 
+    public async Task<List<Festival>> GetPublishedFestivalsAsync(string? search)
+    {
+        var query = _context.Festivals
+            .AsNoTracking()
+            .Include(f => f.TicketCategories)
+            .Where(f => f.Status == FestivalStatus.Published)
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var normalized = search.Trim();
+            query = query.Where(f =>
+                f.Title.Contains(normalized) ||
+                f.Location.Contains(normalized) ||
+                f.City.Contains(normalized) ||
+                f.Country.Contains(normalized));
+        }
+
+        return await query
+            .OrderBy(f => f.StartDate)
+            .ToListAsync();
+    }
+
     public Task<Festival?> GetFestivalByIdWithDetailsAsync(Guid id)
     {
         return _context.Festivals
@@ -42,6 +65,16 @@ public class FestivalRepository : IFestivalRepository
             .ThenInclude(l => l.Artist)
             .Include(f => f.TicketCategories)
             .FirstOrDefaultAsync(f => f.Id == id);
+    }
+
+    public Task<Festival?> GetFestivalDetailsAsync(Guid id)
+    {
+        return _context.Festivals
+            .AsNoTracking()
+            .Include(f => f.Lineups)
+            .ThenInclude(l => l.Artist)
+            .Include(f => f.TicketCategories)
+            .FirstOrDefaultAsync(f => f.Id == id && f.Status == FestivalStatus.Published);
     }
 
     public Task<Festival?> FindFestivalByIdAsync(Guid id)
@@ -126,7 +159,6 @@ public class FestivalRepository : IFestivalRepository
         {
             if (entry.State == EntityState.Added)
             {
-                // Keep newly-added entities pending so they can still be inserted on retry.
                 continue;
             }
 
@@ -173,5 +205,56 @@ public class FestivalRepository : IFestivalRepository
 
         return true;
     }
-}
 
+    public async Task<List<Festival>> GetFeaturedFestivalsAsync(int take)
+    {
+        return await _context.Festivals
+            .AsNoTracking()
+            .Include(f => f.TicketCategories)
+            .Where(f => f.Status == FestivalStatus.Published)
+            .OrderBy(f => f.StartDate)
+            .Take(take)
+            .ToListAsync();
+    }
+
+    public async Task<Dictionary<Guid, int>> GetSoldTicketsByFestivalIdsAsync(IEnumerable<Guid> festivalIds)
+    {
+        var ids = festivalIds.ToList();
+        if (ids.Count == 0)
+        {
+            return new Dictionary<Guid, int>();
+        }
+
+        return await _context.Tickets
+            .AsNoTracking()
+            .Where(t => ids.Contains(t.Category.FestivalId) &&
+                        (t.Status == TicketStatus.Sold || t.Status == TicketStatus.Used))
+            .GroupBy(t => t.Category.FestivalId)
+            .ToDictionaryAsync(group => group.Key, group => group.Count());
+    }
+
+    public async Task<Dictionary<Guid, int>> GetSoldTicketsByCategoryAsync(Guid festivalId)
+    {
+        return await _context.Tickets
+            .AsNoTracking()
+            .Where(t => t.Category.FestivalId == festivalId &&
+                        (t.Status == TicketStatus.Sold || t.Status == TicketStatus.Used))
+            .GroupBy(t => t.CategoryId)
+            .ToDictionaryAsync(group => group.Key, group => group.Count());
+    }
+
+    public async Task<List<TicketCategory>> GetTicketCategoriesByIdsAsync(IEnumerable<Guid> categoryIds)
+    {
+        var ids = categoryIds.ToList();
+        if (ids.Count == 0)
+        {
+            return new List<TicketCategory>();
+        }
+
+        return await _context.TicketCategories
+            .AsNoTracking()
+            .Include(c => c.Festival)
+            .Where(c => ids.Contains(c.Id))
+            .ToListAsync();
+    }
+}
